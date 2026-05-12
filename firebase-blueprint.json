@@ -1,0 +1,42 @@
+{
+  "entities": {
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Registered vehicle in the toll system",
+      "type": "object",
+      "properties": {
+        "plateNumber": { "type": "string" },
+        "ownerName": { "type": "string" },
+        "vehicleType": { "type": "string", "enum": ["car", "truck", "bus", "motorcycle"] },
+        "balance": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["plateNumber", "ownerName", "vehicleType", "balance", "status"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Toll transaction record",
+      "type": "object",
+      "properties": {
+        "plateNumber": { "type": "string" },
+        "vehicleType": { "type": "string" },
+        "amount": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["approved", "rejected"] },
+        "reason": { "type": "string" }
+      },
+      "required": ["plateNumber", "amount", "timestamp", "status"]
+    }
+  },
+  "firestore": {
+    "vehicles/{plateNumber}": {
+      "schema": "Vehicle",
+      "description": "Collection of registered vehicles"
+    },
+    "transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "History of toll transactions"
+    }
+  }
+}

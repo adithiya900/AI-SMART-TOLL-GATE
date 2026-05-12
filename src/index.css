@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-primary: #d4af37;
+  --color-primary-dark: #a88a28;
+  --color-primary-light: #e5c158;
+  --color-dark: #0a0a0a;
+  --color-dark-secondary: #1a1a1a;
+}
+
+@keyframes scan {
+  0%, 100% { top: 0%; }
+  50% { top: 100%; }
+}
+
+.animate-scan {
+  animation: scan 2s ease-in-out infinite;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-white antialiased;
+  }
+}
