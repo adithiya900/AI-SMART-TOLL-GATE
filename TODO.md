@@ -1,38 +1,19 @@
-# Smart Toll Setup Progress
+# TODO - smart-toll-ai-gate
 
-## Completed by AI:
-- [x] Analyzed project/files.
-- [x] Step 1: npm install
-- [x] Step 2: Verify .env (Updated to use Gemini 2.0 Flash Lite)
-- [x] Step 3: Integrate Firestore Backend (Fully connected to UI)
-- [x] Step 4: Cleanup & Optimization (Removed redundant configs and unused code)
-- [x] Step 5: Enable Server Watch Mode (tsx --watch)
+## Step 1: Confirm run mode
+- [x] User confirmed running (real key or local mock fallback allowed)
 
-## Current Status:
-- **AI Recognition**: Optimized (Using gemini-flash-latest for maximum compatibility)
-- **Database**: Real-time Firestore sync with Local Fallback
-- **UI**: Premium, Feature-Rich Dashboard
-- **Analytics**: Real-time revenue and traffic tracking
-- **Ready for Deployment!**
+## Step 2: Create environment file
+- [ ] Create `.env` with `VITE_GEMINI_API_KEY` (or `GEMINI_API_KEY`)
 
-## Completed by AI (Final Phase):
-- [x] Step 6: Added Search Functionality to Vehicle Registry.
-- [x] Step 7: Implemented Dashboard Stats (Revenue, Traffic, Active Vehicles).
-- [x] Step 8: Added Clear History functionality for transactions.
-- [x] Step 9: Integrated Auto-Registration prompt for unrecognized vehicles.
-- [x] Step 10: Verified Production Build (npm run build successful).
+## Step 3: Install dependencies
+- [ ] Run `npm install`
 
-- [x] Step 11: Added detailed Revenue Breakdown by vehicle type.
-- [x] Step 12: Enhanced Transaction History with explicit 'Entry Revenue' details.
+## Step 4: Start dev servers
+- [ ] Run `npm run dev:full`
 
-- [x] Step 13: Implemented Manual Toll Entry mode for operators.
+## Step 5: Verify endpoints & UI
+- [ ] Check backend health: http://localhost:3000/api/health
+- [ ] Open frontend (Vite): usually http://localhost:5173/
+- [ ] Trigger “Take Photo” or “Upload” to confirm OCR flow
 
-- [x] Step 14: Standardized Plate Normalization to prevent false rejections due to spaces/symbols.
-
-## User Manual Steps:
-1. Test: `npm run dev:full`
-2. Search vehicles in the sidebar.
-3. Click "Register Vehicle Now" if a plate is misread or new.
-4. Use "Clear History" (Trash icon) to reset logs.
-
-**PROJECT COMPLETED - PRODUCTION READY!**
