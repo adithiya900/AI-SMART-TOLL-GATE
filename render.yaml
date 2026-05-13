@@ -4,7 +4,7 @@ services:
     runtime: node
     region: singapore
     plan: free
-    buildCommand: npm install && npm run build:full
+    buildCommand: npm install --include=dev && npm run build:full
     startCommand: npm run start
     envVars:
       - key: NODE_ENV
