@@ -9,17 +9,24 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: "AIzaSyAZIi8vMs6AUCBRn6pKCeR8SBiVxyMLREw"
-        sync: false   # Set this manually in Render dashboard
-      - key: "AIzaSyAh4_D81G91lXuPkOagJYUsNeIVgLq9RfU"
-        sync: false
-      - key: "smart-toll-ai.firebaseapp.com"
-        sync: false
-      - key: smart-toll-ai
-        sync: false
-      - key: "smart-toll-ai.firebasestorage.app"
-        sync: false
-      - key: "415985518488"
-        sync: false
-      - key: "1:415985518488:web:e28c5b8af80c4f45880ded"
-        sync: false
+      - key:GEMINI_API_KEY
+        value: "AIzaSyAZIi8vMs6AUCBRn6pKCeR8SBiVxyMLREw"
+        
+      - key:  FIREBASE_API_KEY
+        value:"AIzaSyAh4_D81G91lXuPkOagJYUsNeIVgLq9RfU"
+        
+      - key:FIREBASE_AUTH_DOMAIN
+        value:"smart-toll-ai.firebaseapp.com"
+        
+      - key: FIREBASE_PROJECT_ID
+        value :smart-toll-ai
+        
+      - key:FIREBASE_STORAGE_BUCKET
+        value :"smart-toll-ai.firebasestorage.app"
+        
+      - key: FIREBASE_MESSAGING_SENDER_ID
+        value :"415985518488"
+       
+      - key: FIREBASE_APP_ID
+        value:"1:415985518488:web:e28c5b8af80c4f45880ded"
+        
