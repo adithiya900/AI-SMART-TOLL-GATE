@@ -7,6 +7,10 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react(), tailwindcss()],
+    build: {
+      outDir: 'dist/client',
+      emptyOutDir: true,
+    },
     define: {
 'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY || ''),
     },
