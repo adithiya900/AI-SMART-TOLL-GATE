@@ -126,7 +126,7 @@ export function subscribeToTransactions(callback: (transactions: Transaction[]) 
   const q = query(
     collection(db, 'transactions'),
     orderBy('timestamp', 'desc'),
-    limit(10)
+    limit(50)
   );
 
   return onSnapshot(q, (snapshot) => {

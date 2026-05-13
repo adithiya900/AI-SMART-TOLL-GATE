@@ -1134,7 +1134,7 @@ export default function App() {
 
             <div className="space-y-4 p-6 mt-6 overflow-y-auto flex-1">
               <AnimatePresence>
-                {history.slice(0, 15).map((transaction, index) => (
+                {history.slice(0, 50).map((transaction, index) => (
                   <motion.div
                     key={`${transaction.plateNumber}-${index}`}
                     initial={{ opacity: 0, y: 20 }}
