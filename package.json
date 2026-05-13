@@ -8,6 +8,9 @@
     "server": "tsx server.ts",
     "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "vite build",
+    "build:server": "esbuild server.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/server.js --external:sharp --external:vite",
+    "build:full": "npm run build && npm run build:server",
+    "start": "NODE_ENV=production node dist/server.js",
     "preview": "vite preview",
     "clean": "rimraf dist",
     "lint": "tsc --noEmit"
@@ -38,6 +41,8 @@
     "@types/react-webcam": "^1.1.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.2.1",
+    "esbuild": "^0.24.2",
+    "rimraf": "^6.1.3",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
