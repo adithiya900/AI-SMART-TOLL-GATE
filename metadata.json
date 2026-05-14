@@ -1,8 +1,0 @@
-{
-  "name": "Smart Toll AI Gate",
-  "description": "Automated toll collection system using Gemini AI for license plate recognition and Firebase for vehicle validation.",
-  "requestFramePermissions": [
-    "camera"
-  ],
-  "majorCapabilities": []
-}
