@@ -25,6 +25,7 @@ export default function App() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [dataMode, setDataMode] = useState<'cloud' | 'local'>('cloud');
   
   // Memoize filtered vehicles to prevent expensive re-renders
   const filteredVehicles = React.useMemo(() => {
@@ -75,14 +76,16 @@ export default function App() {
 
     setLoading(true);
     
-    const unsubVehicles = subscribeToAllVehicles((data) => {
+    const unsubVehicles = subscribeToAllVehicles((data, mode) => {
       setVehicles(data);
+      setDataMode(mode);
       setLoading(false);
       if (loadingTimeout) clearTimeout(loadingTimeout);
     });
     
-    const unsubTransactions = subscribeToTransactions((data) => {
+    const unsubTransactions = subscribeToTransactions((data, mode) => {
       setHistory(data);
+      setDataMode(mode);
     });
 
     // Ensure loading completes within 5 seconds even if Firestore fails
@@ -168,8 +171,12 @@ export default function App() {
   const handleSeed = async () => {
     setIsSeeding(true);
     try {
-      const count = await seedTestData();
-      alert(`✅ Successfully seeded ${count} test vehicles into the database!`);
+      const result = await seedTestData();
+      const modeText = result.mode === 'cloud' ? 'Cloud Database' : 'Local Storage';
+      const errorText = result.errors ? `\n\nNote: Some issues occurred:\n${result.errors.join('\n')}` : '';
+      
+      alert(`✅ Successfully seeded ${result.count} test vehicles into ${modeText}!${errorText}`);
+      setDataMode(result.mode);
     } catch (error: any) {
       console.error("Seed error:", error);
       alert(`❌ Seeding failed:\n\n${error.message}\n\nCheck browser console for details.`);
@@ -444,7 +451,17 @@ export default function App() {
               <h1 className="text-2xl font-black bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent tracking-tight">
                 SmartToll AI
               </h1>
-              <p className="text-xs font-mono uppercase tracking-widest opacity-60">License Plate Recognition</p>
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-mono uppercase tracking-widest opacity-60">License Plate Recognition</p>
+                <div className={cn(
+                  "px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-tighter border",
+                  dataMode === 'cloud' 
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                )}>
+                  {dataMode} Mode
+                </div>
+              </div>
             </div>
           </div>
 

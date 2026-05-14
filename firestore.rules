@@ -1,10 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // SECURITY NOTE: This project is in demo mode.
+    // The following rules allow read/write access to all documents.
+    // In a production environment, you should restrict access to authenticated users only.
+    
     match /{document=**} {
-      // Allow all reads and writes (dev/demo mode)
-      // For production: change to: allow read, write: if request.auth != null;
+      // CURRENT: OPEN FOR DEMO/DEVELOPMENT
       allow read, write: if true;
+      
+      // PRODUCTION RECOMMENDED:
+      // allow read, write: if request.auth != null;
     }
   }
 }

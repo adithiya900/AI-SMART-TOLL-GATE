@@ -122,7 +122,7 @@ export async function processToll(plateNumber: string, vehicleType: string): Pro
   return transaction;
 }
 
-export function subscribeToTransactions(callback: (transactions: Transaction[]) => void) {
+export function subscribeToTransactions(callback: (transactions: Transaction[], mode: 'cloud' | 'local') => void) {
   const q = query(
     collection(db, 'transactions'),
     orderBy('timestamp', 'desc'),
@@ -134,11 +134,11 @@ export function subscribeToTransactions(callback: (transactions: Transaction[]) 
       id: doc.id,
       ...doc.data()
     })) as Transaction[];
-    callback(transactions);
+    callback(transactions, 'cloud');
   }, (error) => {
     console.warn("Transactions subscription failed, using local data");
     const local = getLocalData();
-    callback(local.transactions);
+    callback(local.transactions, 'local');
   });
 }
 
@@ -173,21 +173,34 @@ export async function updateVehicleStatus(plateNumber: string, status: 'active' 
   }
 }
 
-export function subscribeToAllVehicles(callback: (vehicles: Vehicle[]) => void) {
+export function subscribeToAllVehicles(callback: (vehicles: Vehicle[], mode: 'cloud' | 'local') => void) {
   const q = query(
     collection(db, 'vehicles'),
     orderBy('createdAt', 'desc'),
     limit(50)
   );
 
-  return onSnapshot(q, (snapshot) => {
+  const unsubSnapshot = onSnapshot(q, (snapshot) => {
     const vehicles = snapshot.docs.map(doc => doc.data() as Vehicle);
-    callback(vehicles);
+    callback(vehicles, 'cloud');
   }, (error) => {
     console.warn("Vehicles subscription failed, using local data");
     const local = getLocalData();
-    callback(local.vehicles);
+    callback(local.vehicles, 'local');
   });
+
+  const handleLocalUpdate = () => {
+    console.log("Local data updated, refreshing UI...");
+    const local = getLocalData();
+    callback(local.vehicles, 'local');
+  };
+
+  window.addEventListener('local-data-updated', handleLocalUpdate);
+
+  return () => {
+    unsubSnapshot();
+    window.removeEventListener('local-data-updated', handleLocalUpdate);
+  };
 }
 export async function deleteVehicle(plateNumber: string): Promise<void> {
   const path = `vehicles/${plateNumber}`;
@@ -232,7 +245,7 @@ export async function clearAllTransactions(): Promise<void> {
   }
 }
 
-export async function seedTestData() {
+export async function seedTestData(): Promise<{ count: number; mode: 'cloud' | 'local'; errors?: string[] }> {
   const testVehicles = [
     { plateNumber: 'TN01AB1234', ownerName: 'Adithiya',   vehicleType: 'car',        balance: 500,  status: 'active' },
     { plateNumber: 'KA01ME1234', ownerName: 'Operator',   vehicleType: 'car',        balance: 500,  status: 'active' },
@@ -280,13 +293,7 @@ export async function seedTestData() {
       }
     }
     
-    if (errors.length > 0) {
-      throw new Error(
-        `Seeded ${successCount}/${testVehicles.length} vehicles.\nFailed:\n${errors.join('\n')}`
-      );
-    }
-    
-    return successCount;
+    return { count: successCount, mode: 'cloud', errors: errors.length > 0 ? errors : undefined };
     
   } catch (e: any) {
     console.warn(`[Seed] Firestore failed for initial test, switching to local mode:`, e?.message);
@@ -323,18 +330,17 @@ export async function seedTestData() {
       
       saveLocalData(localData);
       
-      if (localErrors.length > 0) {
-        throw new Error(
-          `Seeded ${successCount}/${testVehicles.length} vehicles (local storage).\nFailed:\n${localErrors.join('\n')}`
-        );
-      }
+      // Trigger a storage event manually so other tabs/listeners can react if they use 'storage' event
+      // Or just a custom event for this window
+      window.dispatchEvent(new Event('local-data-updated'));
       
-      return successCount;
+      return { count: successCount, mode: 'local', errors: localErrors.length > 0 ? localErrors : undefined };
     } catch (e: any) {
       console.error(`[Seed-Local] Storage error:`, e);
       throw new Error(`Local storage seeding failed: ${e?.message || e}`);
     }
   }
+  return { count: 0, mode: 'local' }; // Should not reach here
 }
 
 

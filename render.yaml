@@ -1,27 +1,26 @@
 services:
   - type: web
     name: smart-toll-ai-gate
-    runtime: node
-    region: singapore
+    env: node
     plan: free
-    buildCommand: npm install --os=linux --cpu=x64 --include=dev && npm run build:full
-    startCommand: npm run start
+    buildCommand: npm run build:full
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: NODE_VERSION
-        value: 18.17.0
+      - key: PORT
+        value: 10000
       - key: GEMINI_API_KEY
-        value: AIzaSyAZIi8vMs6AUCBRn6pKCeR8SBiVxyMLREw
+        sync: false
       - key: VITE_FIREBASE_API_KEY
-        value: AIzaSyAh4_D81G91lXuPkOagJYUsNeIVgLq9RfU
+        sync: false
       - key: VITE_FIREBASE_AUTH_DOMAIN
-        value: smart-toll-ai.firebaseapp.com
+        sync: false
       - key: VITE_FIREBASE_PROJECT_ID
-        value: smart-toll-ai
+        sync: false
       - key: VITE_FIREBASE_STORAGE_BUCKET
-        value: smart-toll-ai.firebasestorage.app
+        sync: false
       - key: VITE_FIREBASE_MESSAGING_SENDER_ID
-        value: "415985518488"
+        sync: false
       - key: VITE_FIREBASE_APP_ID
-        value: "1:415985518488:web:e28c5b8af80c4f45880ded"
+        sync: false
