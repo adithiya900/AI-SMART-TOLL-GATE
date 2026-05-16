@@ -16,7 +16,7 @@ A production-ready Automatic Number Plate Recognition (ANPR) system built with R
 ## Tech Stack
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS, Framer Motion.
 - **Backend**: Node.js, Express (API Proxy).
-- **AI Engine**: Google Gemini 1.5 Flash.
+- **AI Engine**: Google Gemini 1.5 Flash (`gemini-flash-latest`).
 
 ## Prerequisites
 - Node.js (v18+)
@@ -38,10 +38,15 @@ A production-ready Automatic Number Plate Recognition (ANPR) system built with R
 3. **Environment Setup**:
    Create a `.env` file in the root directory:
    ```env
-   VITE_GEMINI_API_KEY=your_gemini_api_key_here
+   GEMINI_API_KEY=your_gemini_api_key_here
    ```
+   *Note: For local development, the backend uses this key to process images. In production (e.g., Render), add this as an environment variable in your dashboard.*
 
-4. **Run the application**:
+4. **Operational Modes**:
+   - **Cloud Mode**: Connects to Firebase for live vehicle registration and transaction tracking.
+   - **Local Mode**: Automatically falls back to browser LocalStorage if Firebase is unavailable, ensuring the gate remains operational.
+
+5. **Run the application**:
    ```bash
    npm run dev:full
    ```

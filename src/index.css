@@ -23,5 +23,57 @@
 @layer base {
   body {
     @apply bg-black text-white antialiased;
+    cursor: none;
+    overflow-x: hidden;
   }
+  
+  /* Show cursor on inputs and elements that need standard interaction */
+  input, select, textarea {
+    cursor: text;
+  }
+
+  ::selection {
+    @apply bg-amber-500/30 text-amber-100;
+  }
+
+  /* Custom Premium Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-amber-500/20 rounded-full border border-amber-500/10;
+    transition: background 0.3s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-amber-500/50;
+  }
+
+  /* Global Focus Styles */
+  :focus-visible {
+    outline: 2px solid #d4af37;
+    outline-offset: 2px;
+  }
+}
+
+/* Hide cursor globally for the custom cursor to shine */
+* {
+  cursor: none !important;
+}
+
+input, select, textarea, [contenteditable], button, a, label {
+  /* These will be handled by the React cursor logic for visual feedback, 
+     but we still hide the system cursor */
+  cursor: none !important;
+}
+
+/* Specific fix for elements that might force a system cursor */
+iframe, canvas {
+  cursor: none !important;
 }

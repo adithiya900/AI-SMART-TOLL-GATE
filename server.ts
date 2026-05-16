@@ -28,21 +28,23 @@ async function startServer() {
   const cleanAndValidatePlate = (plate: string) => {
     if (!plate) return "";
     let cleaned = plate.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    let chars = cleaned.split('');
     
-    const toNum: { [key: string]: string } = { 'O': '0', 'I': '1', 'Z': '2', 'S': '5', 'B': '8', 'G': '6', 'T': '7' };
-    const toAlpha: { [key: string]: string } = { '0': 'O', '1': 'I', '2': 'Z', '5': 'S', '8': 'B', '6': 'G', '7': 'T' };
-
-    // Standard Indian Format: AA NN AA NNNN (10 chars)
-    if (chars.length >= 9 && chars.length <= 11) {
-      chars = chars.map((char, i) => {
-        if (i === 0 || i === 1) return toAlpha[char] || char;
-        if (i === 2 || i === 3) return toNum[char] || char;
-        if (i >= chars.length - 4) return toNum[char] || char;
-        return char;
-      });
+    // Indian formats usually follow AA NN AA NNNN or AA NN NNNN
+    // We'll do some basic character correction for common OCR errors
+    const correctionMap: { [key: string]: string } = { 'O': '0', 'I': '1', 'Z': '2', 'S': '5', 'B': '8', 'G': '6', 'T': '7' };
+    
+    // If the plate looks like an Indian plate, apply corrections to numeric/alpha positions
+    if (cleaned.length >= 7 && cleaned.length <= 11) {
+      let chars = cleaned.split('');
+      // Positions 0,1 are usually letters
+      if (/[0-9]/.test(chars[0])) { /* could try to fix but let's keep it simple */ }
+      // Last 4 are usually numbers
+      for (let i = chars.length - 4; i < chars.length; i++) {
+        if (correctionMap[chars[i]]) chars[i] = correctionMap[chars[i]];
+      }
+      cleaned = chars.join('');
     }
-    return chars.join('');
+    return cleaned;
   };
 
   app.get('/api/health', (req, res) => {
@@ -66,50 +68,67 @@ async function startServer() {
       return res.status(400).json({ success: false, error: 'No image provided' });
     }
 
-    if (!getApiKey()) {
+    const apiKey = getApiKey();
+    if (!apiKey) {
       return res.status(500).json({ success: false, error: 'GEMINI_API_KEY is not configured' });
     }
 
     try {
       const base64Data = image.split(',')[1];
-      const imageBuffer = Buffer.from(base64Data, 'base64');
-
       const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
       
-      const prompt = `Return ONLY JSON: {"plateNumber":"TEXT","vehicleType":"car|motorcycle|truck|bus","confidence":0.95,"boundingBox":{"ymin":100,"xmin":100,"ymax":200,"xmax":300}}.`;
+      const prompt = `
+        You are a highly accurate Automatic Number Plate Recognition (ANPR) system.
+        Analyze the provided image and extract the license plate details.
+        
+        Focus on:
+        1. **plateNumber**: The alphanumeric text on the license plate (e.g., "TN43AB1234").
+        2. **vehicleType**: One of: "car", "motorcycle", "truck", "bus".
+        3. **confidence**: Your confidence score from 0.0 to 1.0.
+        4. **boundingBox**: The normalized coordinates (0-1000) of the plate: {"ymin", "xmin", "ymax", "xmax"}.
 
-      // AI Call with 60s timeout
+        IMPORTANT: Return ONLY a valid JSON object. No markdown, no extra text.
+      `;
+
+      // AI Call with 30s timeout
       const aiPromise = model.generateContent([
         prompt,
         { inlineData: { data: base64Data, mimeType: "image/jpeg" } }
       ]);
 
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("AI Timeout (60s)")), 60000)
+        setTimeout(() => reject(new Error("AI Engine Timeout (30s)")), 30000)
       );
 
       const result: any = await Promise.race([aiPromise, timeoutPromise]);
       const response = await result.response;
       const responseText = await response.text();
-      const text = responseText.replace(/```json\n?|\n?```/g, '').trim();
       
-      let aiResult;
-      try {
-        aiResult = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Invalid AI format");
+      // Extract JSON even if wrapped in markdown
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("AI failed to return structured data");
       }
+      
+      const aiResult = JSON.parse(jsonMatch[0]);
 
-      // Cropping Logic
+      // Cropping Logic using Sharp
       let croppedImageBase64 = null;
       try {
+        const imageBuffer = Buffer.from(base64Data, 'base64');
         const metadata = await sharp(imageBuffer).metadata();
+        
         if (aiResult.boundingBox && metadata.width && metadata.height) {
           const { ymin, xmin, ymax, xmax } = aiResult.boundingBox;
-          const left = Math.max(0, Math.floor((xmin / 1000) * metadata.width));
-          const top = Math.max(0, Math.floor((ymin / 1000) * metadata.height));
-          const w = Math.min(metadata.width - left, Math.floor(((xmax - xmin) / 1000) * metadata.width));
-          const h = Math.min(metadata.height - top, Math.floor(((ymax - ymin) / 1000) * metadata.height));
+          
+          // Add 10% padding to crop
+          const padY = (ymax - ymin) * 0.1;
+          const padX = (xmax - xmin) * 0.1;
+          
+          const left = Math.max(0, Math.floor(((xmin - padX) / 1000) * metadata.width));
+          const top = Math.max(0, Math.floor(((ymin - padY) / 1000) * metadata.height));
+          const w = Math.min(metadata.width - left, Math.floor(((xmax - xmin + 2 * padX) / 1000) * metadata.width));
+          const h = Math.min(metadata.height - top, Math.floor(((ymax - ymin + 2 * padY) / 1000) * metadata.height));
 
           if (w > 0 && h > 0) {
             const crop = await sharp(imageBuffer).extract({ left, top, width: w, height: h }).toBuffer();
@@ -117,7 +136,7 @@ async function startServer() {
           }
         }
       } catch (err) {
-        console.warn("[ANPR] Crop skipped");
+        console.warn("[ANPR] Crop failed:", err instanceof Error ? err.message : String(err));
       }
 
       const finalPlate = cleanAndValidatePlate(aiResult.plateNumber);

@@ -10,7 +10,7 @@
     "build": "vite build",
     "build:server": "esbuild server.ts --bundle --platform=node --target=node18 --format=esm --outfile=dist/server.js --external:sharp --external:vite",
     "build:full": "npm run build && npm run build:server",
-    "start": "NODE_ENV=production node dist/server.js",
+    "start": "node dist/server.js",
     "preview": "vite preview",
     "clean": "rimraf dist",
     "lint": "tsc --noEmit"

@@ -66,11 +66,7 @@ export default function App() {
       if (firebaseUser) {
         setUser(firebaseUser);
       } else {
-        // Set a fallback user for local mode if auth fails
-        setUser({
-          displayName: 'Operator (Local Mode)',
-          email: 'local@smarttoll.ai'
-        } as any);
+        setUser(null);
       }
     });
 
@@ -88,15 +84,10 @@ export default function App() {
       setDataMode(mode);
     });
 
-    // Ensure loading completes within 5 seconds even if Firestore fails
+    // Ensure loading completes within 3 seconds
     loadingTimeout = setTimeout(() => {
       setLoading(false);
-      // Ensure user is set for local mode
-      setUser(prev => prev || ({
-        displayName: 'Operator (Local Mode)',
-        email: 'local@smarttoll.ai'
-      } as any));
-    }, 5000);
+    }, 3000);
 
     return () => {
       unsubAuth();
@@ -326,6 +317,30 @@ export default function App() {
     }
   }, [processImage]);
 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  const [isInput, setIsInput] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isClickable = target.tagName === 'BUTTON' || target.tagName === 'A' || target.closest('button');
+      const isInputField = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+      
+      setIsHovering(!!isClickable);
+      setIsInput(isInputField);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center">
@@ -338,9 +353,39 @@ export default function App() {
     );
   }
 
+  // Render helper for the cursor (needed for both login and main page)
+  const renderCursor = () => (
+    <>
+      <motion.div 
+        className="fixed top-0 left-0 w-6 h-6 border-2 border-amber-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        animate={{ 
+          x: mousePos.x - 12, 
+          y: mousePos.y - 12,
+          scale: isInput ? 0.5 : (isHovering ? 2.5 : 1),
+          borderRadius: isInput ? '2px' : '50%',
+          width: isInput ? '2px' : '24px',
+          height: isInput ? '24px' : '24px',
+          borderWidth: isInput ? '0px' : '2px',
+          backgroundColor: isInput ? '#d4af37' : (isHovering ? 'rgba(212, 175, 55, 0.2)' : 'rgba(212, 175, 55, 0)')
+        }}
+        transition={{ type: 'spring', damping: 25, stiffness: 250, mass: 0.5 }}
+      />
+      <motion.div 
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-amber-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        animate={{ 
+          x: mousePos.x - 3, 
+          y: mousePos.y - 3,
+          scale: (isHovering || isInput) ? 0 : 1
+        }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.2 }}
+      />
+    </>
+  );
+
   if (!user) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden selection:bg-amber-500/30 selection:text-amber-100">
+        {renderCursor()}
         {/* Animated Background */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
@@ -439,7 +484,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white selection:bg-amber-500/30 selection:text-amber-100">
+      {renderCursor()}
       {/* Header */}
       <header className="backdrop-blur-xl bg-black/90 border-b border-amber-500/20 shadow-sm sticky top-0 z-50 supports-[backdrop-filter:blur(20px)]:bg-black/80">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -544,28 +590,28 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/50 shadow-lg"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
           >
-            <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-1">Total Traffic</p>
-            <h4 className="text-3xl font-black text-white font-mono">{history.length}</h4>
+            <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Total Traffic</p>
+            <h4 className="text-3xl font-black text-amber-100 font-mono">{history.length}</h4>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/50 shadow-lg"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
           >
-            <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-1">Active Vehicles</p>
-            <h4 className="text-3xl font-black text-blue-600 font-mono">{vehicles.filter(v => v.status === 'active').length}</h4>
+            <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Active Vehicles</p>
+            <h4 className="text-3xl font-black text-amber-400 font-mono">{vehicles.filter(v => v.status === 'active').length}</h4>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white/70 backdrop-blur-xl p-6 rounded-3xl border border-white/50 shadow-lg"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
           >
-            <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-1">Last Sync</p>
-            <h4 className="text-lg font-bold text-white font-mono mt-2">{new Date().toLocaleTimeString()}</h4>
+            <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Last Sync</p>
+            <h4 className="text-lg font-bold text-amber-200 font-mono mt-2">{new Date().toLocaleTimeString()}</h4>
           </motion.div>
         </div>
       </div>
@@ -812,7 +858,7 @@ export default function App() {
                     className="space-y-10"
                   >
                     {recognitionResult.error ? (
-                      <div className="bg-red-50 border-2 border-red-200 rounded-3xl p-10 flex flex-col md:flex-row items-center gap-6 text-red-800">
+                      <div className="bg-red-500/10 border-2 border-red-500/30 rounded-3xl p-10 flex flex-col md:flex-row items-center gap-6 text-red-400">
                         <AlertCircle className="w-12 h-12 flex-shrink-0" />
                         <div className="flex-1 text-center md:text-left">
                           <h4 className="text-xl font-bold uppercase font-mono">Detection Issue</h4>
@@ -1075,16 +1121,16 @@ export default function App() {
                       <div className="flex items-center gap-4">
                         <div className={`p-3 rounded-xl border-4 shadow-lg font-mono font-bold text-sm uppercase tracking-wide flex-shrink-0 ${
                           v.status === 'active' 
-                            ? 'border-emerald-400 bg-emerald-100 text-emerald-800 shadow-emerald-200/50' 
-                            : 'border-red-400 bg-red-100 text-red-800 shadow-red-200/50'
+                            ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400 shadow-emerald-500/20' 
+                            : 'border-red-500/50 bg-red-500/10 text-red-400 shadow-red-500/20'
                         }`}>
                           {v.vehicleType}
                         </div>
                         <div>
-                          <h4 className="text-xl font-mono font-bold uppercase tracking-tight">{v.plateNumber}</h4>
-                          <p className="text-lg opacity-90 mt-1">{v.ownerName}</p>
-                          <p className="text-sm opacity-70 font-mono mt-1">
-                            Balance: <span className="font-bold text-2xl">₹{v.balance}</span>
+                          <h4 className="text-xl font-mono font-bold uppercase tracking-tight text-white">{v.plateNumber}</h4>
+                          <p className="text-lg opacity-70 mt-1 text-gray-300">{v.ownerName}</p>
+                          <p className="text-sm opacity-60 font-mono mt-1 text-gray-400">
+                            Balance: <span className="font-bold text-2xl text-amber-400">₹{v.balance}</span>
                           </p>
                         </div>
                       </div>
@@ -1092,10 +1138,10 @@ export default function App() {
                         <button 
                           onClick={() => toggleStatus(v.plateNumber, v.status)}
                           title={v.status === 'active' ? 'Suspend' : 'Activate'}
-                          className={`p-3 rounded-xl transition-all shadow-sm font-mono uppercase text-xs tracking-wider ${
+                          className={`p-3 rounded-xl transition-all shadow-sm font-mono uppercase text-xs tracking-wider border ${
                             v.status === 'active'
-                              ? 'bg-red-100 hover:bg-red-200 border border-red-200 text-red-700 hover:text-red-900 shadow-red-100 hover:shadow-red-200'
-                              : 'bg-emerald-100 hover:bg-emerald-200 border border-emerald-200 text-emerald-700 hover:text-emerald-900 shadow-emerald-100 hover:shadow-emerald-200'
+                              ? 'bg-red-500/10 hover:bg-red-500/20 border-red-500/30 text-red-400'
+                              : 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30 text-emerald-400'
                           }`}
                         >
                           {v.status === 'active' ? 'Suspend' : 'Activate'}
@@ -1103,7 +1149,7 @@ export default function App() {
                         <button 
                           onClick={() => handleDeleteVehicle(v.plateNumber)}
                           title="Delete"
-                          className="p-3 bg-red-100 hover:bg-red-200 border border-red-200 text-red-700 hover:text-red-900 rounded-xl shadow-sm hover:shadow-md transition-all font-mono text-xs uppercase tracking-wider"
+                          className="p-3 bg-gray-800 hover:bg-red-900 border border-white/10 text-gray-400 hover:text-red-300 rounded-xl shadow-sm hover:shadow-md transition-all font-mono text-xs uppercase tracking-wider"
                         >
                           Delete
                         </button>
@@ -1112,10 +1158,10 @@ export default function App() {
                   </motion.div>
                 ))}
                 {filteredVehicles.length === 0 && (
-                  <div className="p-16 border-2 border-dashed border-gray-300 rounded-3xl text-center text-gray-400 bg-gray-50/50">
-                    <UserCheck className="w-20 h-20 mx-auto mb-6 opacity-30" />
-                    <h4 className="text-2xl font-bold uppercase tracking-wider mb-3 font-mono">No Vehicles Registered</h4>
-                    <p className="text-lg opacity-70">Click + to add your first vehicle</p>
+                  <div className="p-16 border-2 border-dashed border-amber-500/20 rounded-3xl text-center text-gray-500 bg-gray-900/50">
+                    <UserCheck className="w-20 h-20 mx-auto mb-6 opacity-20 text-amber-500" />
+                    <h4 className="text-2xl font-bold uppercase tracking-wider mb-3 font-mono text-amber-400">No Vehicles Registered</h4>
+                    <p className="text-lg opacity-50">Click + to add your first vehicle</p>
                   </div>
                 )}
               </div>
@@ -1156,26 +1202,26 @@ export default function App() {
                     key={`${transaction.plateNumber}-${index}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="group p-6 rounded-2xl border transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1 bg-gradient-to-r from-white to-slate-50 border-slate-200 hover:border-emerald-300"
+                    className="group p-6 rounded-2xl border transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1 bg-gradient-to-r from-gray-900 to-black border-amber-500/20 hover:border-amber-400"
                   >
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-xl font-mono font-bold uppercase tracking-tight truncate">{transaction.plateNumber}</h4>
-                        <p className="text-sm opacity-70 uppercase font-mono mt-1">{transaction.vehicleType}</p>
+                        <h4 className="text-xl font-mono font-bold uppercase tracking-tight truncate text-amber-400">{transaction.plateNumber}</h4>
+                        <p className="text-sm opacity-50 uppercase font-mono mt-1 text-gray-400">{transaction.vehicleType}</p>
                       </div>
                       <div className={`px-4 py-2 rounded-full text-sm font-bold uppercase shadow-md ${
                         transaction.status === 'approved'
-                          ? 'bg-emerald-100 text-emerald-800 border-2 border-emerald-200 shadow-emerald-200/50'
-                          : 'bg-red-100 text-red-800 border-2 border-red-200 shadow-red-200/50'
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-emerald-500/10'
+                          : 'bg-red-500/10 text-red-400 border border-red-500/20 shadow-red-500/10'
                       }`}>
                         {transaction.status}
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-sm opacity-80 font-mono border-t border-slate-100 pt-3">
-                      <span className="opacity-60">{new Date((transaction.timestamp as any)?.seconds * 1000).toLocaleTimeString()}</span>
+                    <div className="flex items-center justify-between text-sm opacity-80 font-mono border-t border-white/5 pt-3">
+                      <span className="opacity-40 text-gray-500">{new Date((transaction.timestamp as any)?.seconds * 1000).toLocaleTimeString()}</span>
                       <div className="text-right">
-                        <p className="text-[10px] uppercase opacity-40 font-bold mb-0.5">Entry Revenue</p>
-                        <p className="text-2xl font-bold text-emerald-600">₹{transaction.amount}</p>
+                        <p className="text-[10px] uppercase opacity-30 font-bold mb-0.5 text-gray-500">Entry Revenue</p>
+                        <p className="text-2xl font-bold text-amber-400">₹{transaction.amount}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -1196,9 +1242,9 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="border-t border-slate-200/50 mt-24 py-12 bg-white/50 backdrop-blur-sm">
+      <footer className="border-t border-amber-500/10 mt-24 py-12 bg-black/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-sm opacity-50 font-mono uppercase tracking-wider">
+          <p className="text-sm opacity-40 font-mono uppercase tracking-wider text-amber-200/60">
             Smart Toll AI Gate System • Powered by Google Gemini • Production Ready
           </p>
         </div>
