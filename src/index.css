@@ -4,9 +4,9 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   
-  --color-primary: #d4af37;
-  --color-primary-dark: #a88a28;
-  --color-primary-light: #e5c158;
+  --color-primary: #3b82f6;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #60a5fa;
   --color-dark: #0a0a0a;
   --color-dark-secondary: #1a1a1a;
 }
@@ -33,7 +33,7 @@
   }
 
   ::selection {
-    @apply bg-amber-500/30 text-amber-100;
+    @apply bg-blue-500/30 text-blue-100;
   }
 
   /* Custom Premium Scrollbar */
@@ -47,17 +47,17 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-amber-500/20 rounded-full border border-amber-500/10;
+    @apply bg-blue-500/20 rounded-full border border-blue-500/10;
     transition: background 0.3s;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-amber-500/50;
+    @apply bg-blue-500/50;
   }
 
   /* Global Focus Styles */
   :focus-visible {
-    outline: 2px solid #d4af37;
+    outline: 2px solid #3b82f6;
     outline-offset: 2px;
   }
 }

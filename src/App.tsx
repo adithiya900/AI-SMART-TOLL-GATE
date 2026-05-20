@@ -347,7 +347,7 @@ export default function App() {
         <motion.div 
           animate={{ rotate: 360 }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="w-24 h-24 border-4 border-amber-500 border-t-transparent rounded-full"
+          className="w-24 h-24 border-4 border-blue-500 border-t-transparent rounded-full"
         />
       </div>
     );
@@ -357,7 +357,7 @@ export default function App() {
   const renderCursor = () => (
     <>
       <motion.div 
-        className="fixed top-0 left-0 w-6 h-6 border-2 border-amber-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 w-6 h-6 border-2 border-blue-500 rounded-full pointer-events-none z-[9999] hidden md:block"
         animate={{ 
           x: mousePos.x - 12, 
           y: mousePos.y - 12,
@@ -366,12 +366,12 @@ export default function App() {
           width: isInput ? '2px' : '24px',
           height: isInput ? '24px' : '24px',
           borderWidth: isInput ? '0px' : '2px',
-          backgroundColor: isInput ? '#d4af37' : (isHovering ? 'rgba(212, 175, 55, 0.2)' : 'rgba(212, 175, 55, 0)')
+          backgroundColor: isInput ? '#3b82f6' : (isHovering ? 'rgba(212, 175, 55, 0.2)' : 'rgba(212, 175, 55, 0)')
         }}
         transition={{ type: 'spring', damping: 25, stiffness: 250, mass: 0.5 }}
       />
       <motion.div 
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-amber-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 w-1.5 h-1.5 bg-blue-500 rounded-full pointer-events-none z-[9999] hidden md:block"
         animate={{ 
           x: mousePos.x - 3, 
           y: mousePos.y - 3,
@@ -384,13 +384,13 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden selection:bg-amber-500/30 selection:text-amber-100">
+      <div className="min-h-screen bg-black flex items-center justify-center p-6 relative overflow-hidden selection:bg-blue-500/30 selection:text-blue-100">
         {renderCursor()}
         {/* Animated Background */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.15),transparent_50%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(20,184,166,0.15),transparent_50%)]" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
         </div>
 
         <motion.div 
@@ -401,18 +401,18 @@ export default function App() {
         >
           <div className="bg-gray-900/50 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl relative overflow-hidden">
             {/* Top accent line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500" />
             
             <div className="text-center mb-10">
               <motion.div 
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", delay: 0.2 }}
-                className="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-xl shadow-amber-500/50 mx-auto mb-6 border border-amber-400/30"
+                className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/50 mx-auto mb-6 border border-blue-400/30"
               >
                 <Car className="w-10 h-10 text-black" />
               </motion.div>
-              <h1 className="text-3xl font-black bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent tracking-tight mb-2">
+              <h1 className="text-3xl font-black bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent tracking-tight mb-2">
                 SmartToll AI
               </h1>
               <p className="text-sm font-mono uppercase tracking-widest text-gray-400">Authorized Personnel Only</p>
@@ -430,7 +430,7 @@ export default function App() {
                     required
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full bg-black/50 border border-amber-500/30 text-amber-300 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all placeholder:text-gray-600 font-mono"
+                    className="w-full bg-black/50 border border-blue-500/30 text-blue-300 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-600 font-mono"
                     placeholder="operator@smarttoll.ai"
                   />
                 </div>
@@ -447,7 +447,7 @@ export default function App() {
                     required
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full bg-black/50 border border-amber-500/30 text-amber-300 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all placeholder:text-gray-600 font-mono"
+                    className="w-full bg-black/50 border border-blue-500/30 text-blue-300 pl-12 pr-4 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-600 font-mono"
                     placeholder="••••••••"
                   />
                 </div>
@@ -458,7 +458,7 @@ export default function App() {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loginLoading}
-                className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black py-4 rounded-xl font-bold font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed mt-8 border border-amber-400"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-400 hover:to-blue-500 text-black py-4 rounded-xl font-bold font-mono uppercase tracking-widest shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed mt-8 border border-blue-400"
               >
                 {loginLoading ? (
                   <>
@@ -484,17 +484,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white selection:bg-amber-500/30 selection:text-amber-100">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white selection:bg-blue-500/30 selection:text-blue-100">
       {renderCursor()}
       {/* Header */}
-      <header className="backdrop-blur-xl bg-black/90 border-b border-amber-500/20 shadow-sm sticky top-0 z-50 supports-[backdrop-filter:blur(20px)]:bg-black/80">
+      <header className="backdrop-blur-xl bg-black/90 border-b border-blue-500/20 shadow-sm sticky top-0 z-50 supports-[backdrop-filter:blur(20px)]:bg-black/80">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center shadow-xl shadow-amber-500/50">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-500/50">
               <Car className="w-7 h-7 text-black" />
             </div>
             <div>
-              <h1 className="text-2xl font-black bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 bg-clip-text text-transparent tracking-tight">
+              <h1 className="text-2xl font-black bg-gradient-to-r from-blue-400 via-blue-300 to-blue-500 bg-clip-text text-transparent tracking-tight">
                 SmartToll AI
               </h1>
               <div className="flex items-center gap-2">
@@ -503,7 +503,7 @@ export default function App() {
                   "px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-tighter border",
                   dataMode === 'cloud' 
                     ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                    : "bg-blue-500/10 text-blue-400 border-blue-500/20"
                 )}>
                   {dataMode} Mode
                 </div>
@@ -517,7 +517,7 @@ export default function App() {
               whileTap={{ scale: 0.95 }}
               onClick={handleSeed}
               disabled={isSeeding}
-              className="px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black text-sm font-mono uppercase tracking-widest rounded-xl shadow-lg hover:shadow-amber-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border border-amber-400"
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-black text-sm font-mono uppercase tracking-widest rounded-xl shadow-lg hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 border border-blue-400"
             >
               {isSeeding ? (
                 <>
@@ -543,7 +543,7 @@ export default function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setUser(null)}
-                className="w-12 h-12 border-2 border-amber-500/50 rounded-2xl flex items-center justify-center hover:bg-red-900 hover:border-red-500 text-amber-400 hover:text-red-300 shadow-sm hover:shadow-md transition-all"
+                className="w-12 h-12 border-2 border-blue-500/50 rounded-2xl flex items-center justify-center hover:bg-red-900 hover:border-red-500 text-blue-400 hover:text-red-300 shadow-sm hover:shadow-md transition-all"
               >
                 <LogOut className="w-5 h-5" />
               </motion.button>
@@ -559,15 +559,15 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg group hover:shadow-amber-500/50 transition-all"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-blue-500/20 shadow-lg group hover:shadow-blue-500/50 transition-all"
           >
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-mono uppercase tracking-widest text-gray-400">Total Revenue</p>
-              <div className="px-2 py-1 bg-amber-500/20 text-amber-300 text-[10px] font-bold rounded-lg uppercase tracking-tight">
+              <div className="px-2 py-1 bg-blue-500/20 text-blue-300 text-[10px] font-bold rounded-lg uppercase tracking-tight">
                 {history.filter(t => t.status === 'approved').length} Entries
               </div>
             </div>
-            <h4 className="text-4xl font-black text-amber-400 font-mono mb-4">
+            <h4 className="text-4xl font-black text-blue-400 font-mono mb-4">
               ₹{history.filter(t => t.status === 'approved').reduce((acc, t) => acc + t.amount, 0)}
             </h4>
             
@@ -580,7 +580,7 @@ export default function App() {
                 return (
                   <div key={type} className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-gray-400">
                     <span>{type}s</span>
-                    <span className="font-bold text-amber-300">₹{typeRevenue}</span>
+                    <span className="font-bold text-blue-300">₹{typeRevenue}</span>
                   </div>
                 );
               })}
@@ -590,28 +590,28 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-blue-500/20 shadow-lg hover:shadow-blue-500/20 transition-all"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Total Traffic</p>
-            <h4 className="text-3xl font-black text-amber-100 font-mono">{history.length}</h4>
+            <h4 className="text-3xl font-black text-blue-100 font-mono">{history.length}</h4>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-blue-500/20 shadow-lg hover:shadow-blue-500/20 transition-all"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Active Vehicles</p>
-            <h4 className="text-3xl font-black text-amber-400 font-mono">{vehicles.filter(v => v.status === 'active').length}</h4>
+            <h4 className="text-3xl font-black text-blue-400 font-mono">{vehicles.filter(v => v.status === 'active').length}</h4>
           </motion.div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-amber-500/20 shadow-lg hover:shadow-amber-500/20 transition-all"
+            className="bg-gray-900/70 backdrop-blur-xl p-6 rounded-3xl border border-blue-500/20 shadow-lg hover:shadow-blue-500/20 transition-all"
           >
             <p className="text-xs font-mono uppercase tracking-widest text-gray-400 mb-1">Last Sync</p>
-            <h4 className="text-lg font-bold text-amber-200 font-mono mt-2">{new Date().toLocaleTimeString()}</h4>
+            <h4 className="text-lg font-bold text-blue-200 font-mono mt-2">{new Date().toLocaleTimeString()}</h4>
           </motion.div>
         </div>
       </div>
@@ -625,14 +625,14 @@ export default function App() {
             <motion.section 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-amber-500/20 shadow-2xl overflow-hidden"
+              className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-blue-500/20 shadow-2xl overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-black to-gray-900/80 px-8 py-6 border-b border-amber-500/20">
-                <h2 className="text-2xl font-black text-amber-400 flex items-center gap-4">
+              <div className="bg-gradient-to-r from-black to-gray-900/80 px-8 py-6 border-b border-blue-500/20">
+                <h2 className="text-2xl font-black text-blue-400 flex items-center gap-4">
                   <Camera className="w-8 h-8" />
                   Live Detection
                 </h2>
-                <p className="text-amber-200/60 text-sm font-mono uppercase tracking-widest opacity-80">Real-time license plate recognition</p>
+                <p className="text-blue-200/60 text-sm font-mono uppercase tracking-widest opacity-80">Real-time license plate recognition</p>
               </div>
 
               <div className="p-8 relative">
@@ -655,7 +655,7 @@ export default function App() {
                       <img src={selectedImage} alt="Captured" className="w-full h-full object-contain" />
                       {recognitionResult?.boundingBox && (
                         <div 
-                          className="absolute border-4 border-amber-400 shadow-[0_0_20px_rgba(212,175,55,0.8)] rounded-sm pointer-events-none transition-all duration-500"
+                          className="absolute border-4 border-blue-400 shadow-[0_0_20px_rgba(59,130,246,0.8)] rounded-sm pointer-events-none transition-all duration-500"
                           style={{
                             top: `${recognitionResult.boundingBox.ymin / 10}%`,
                             left: `${recognitionResult.boundingBox.xmin / 10}%`,
@@ -663,7 +663,7 @@ export default function App() {
                             height: `${(recognitionResult.boundingBox.ymax - recognitionResult.boundingBox.ymin) / 10}%`,
                           }}
                         >
-                          <div className="absolute -top-8 left-0 bg-amber-500 text-black text-[10px] px-2 py-0.5 rounded-t-sm font-bold uppercase tracking-tighter whitespace-nowrap">
+                          <div className="absolute -top-8 left-0 bg-blue-500 text-black text-[10px] px-2 py-0.5 rounded-t-sm font-bold uppercase tracking-tighter whitespace-nowrap">
                             Number Plate Detected
                           </div>
                         </div>
@@ -674,9 +674,9 @@ export default function App() {
                   {/* Scan overlay */}
                   {!selectedImage && (
                     <div className="absolute inset-0 pointer-events-none">
-                      <div className="absolute top-1/4 left-1/4 right-1/4 bottom-1/4 border-4 border-amber-400/30 rounded-2xl" />
-                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(212,175,55,0.05)0%,transparent_60%)] animate-pulse" />
-                      <div className="absolute top-0 left-0 w-full h-1 bg-amber-400/50 blur-sm animate-[scan_2s_ease-in-out_infinite]" />
+                      <div className="absolute top-1/4 left-1/4 right-1/4 bottom-1/4 border-4 border-blue-400/30 rounded-2xl" />
+                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.05)0%,transparent_60%)] animate-pulse" />
+                      <div className="absolute top-0 left-0 w-full h-1 bg-blue-400/50 blur-sm animate-[scan_2s_ease-in-out_infinite]" />
                     </div>
                   )}
 
@@ -687,18 +687,18 @@ export default function App() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                       >
-                        <div className="absolute inset-0 border-4 border-amber-400/20 rounded-full" />
+                        <div className="absolute inset-0 border-4 border-blue-400/20 rounded-full" />
                         <motion.div 
-                          className="absolute inset-0 border-4 border-amber-400 border-t-transparent rounded-full"
+                          className="absolute inset-0 border-4 border-blue-400 border-t-transparent rounded-full"
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         />
-                        <div className="absolute inset-4 bg-amber-500/10 rounded-full flex items-center justify-center">
-                          <Scan className="w-10 h-10 text-amber-400 animate-pulse" />
+                        <div className="absolute inset-4 bg-blue-500/10 rounded-full flex items-center justify-center">
+                          <Scan className="w-10 h-10 text-blue-400 animate-pulse" />
                         </div>
                       </motion.div>
                       <div className="text-center mt-10">
-                        <h3 className="text-3xl font-black uppercase tracking-[0.2em] mb-4 bg-gradient-to-r from-amber-400 to-amber-300 bg-clip-text text-transparent">
+                        <h3 className="text-3xl font-black uppercase tracking-[0.2em] mb-4 bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">
                           {processStatus}
                         </h3>
                         <div className="flex items-center justify-center gap-4 text-sm font-mono opacity-70">
@@ -712,10 +712,10 @@ export default function App() {
                   )}
 
                   {isManualMode && (
-                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center z-30 text-white p-8 rounded-3xl backdrop-blur-md border border-amber-500/20">
+                    <div className="absolute inset-0 bg-black/95 flex flex-col items-center justify-center z-30 text-white p-8 rounded-3xl backdrop-blur-md border border-blue-500/20">
                       <div className="w-full max-w-sm space-y-8">
                         <div className="text-center">
-                          <h3 className="text-2xl font-black uppercase tracking-widest text-amber-400 mb-2">Manual Toll Entry</h3>
+                          <h3 className="text-2xl font-black uppercase tracking-widest text-blue-400 mb-2">Manual Toll Entry</h3>
                           <p className="text-xs font-mono opacity-60 uppercase tracking-widest">Enter vehicle details manually</p>
                         </div>
                         
@@ -729,7 +729,7 @@ export default function App() {
                               value={manualPlate}
                               onChange={(e) => setManualPlate(e.target.value.toUpperCase())}
                               placeholder="E.G. TN 43 AB 1234"
-                              className="w-full bg-black/50 border border-amber-500/30 text-amber-300 px-6 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono text-xl tracking-[0.2em] text-center"
+                              className="w-full bg-black/50 border border-blue-500/30 text-blue-300 px-6 py-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-xl tracking-[0.2em] text-center"
                             />
                           </div>
 
@@ -744,7 +744,7 @@ export default function App() {
                                   className={cn(
                                     "py-3 rounded-xl border font-mono text-[10px] uppercase tracking-widest transition-all",
                                     manualVehicleType === type 
-                                      ? "bg-amber-500 border-amber-400 text-black shadow-[0_0_15px_rgba(212,175,55,0.3)]"
+                                      ? "bg-blue-500 border-blue-400 text-black shadow-[0_0_15px_rgba(59,130,246,0.3)]"
                                       : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
                                   )}
                                 >
@@ -764,7 +764,7 @@ export default function App() {
                             </button>
                             <button
                               type="submit"
-                              className="flex-2 bg-amber-500 hover:bg-amber-600 text-black px-8 py-4 rounded-xl font-mono uppercase text-xs font-bold tracking-widest shadow-lg hover:shadow-amber-500/50 transition-all border border-amber-400"
+                              className="flex-2 bg-blue-500 hover:bg-blue-600 text-black px-8 py-4 rounded-xl font-mono uppercase text-xs font-bold tracking-widest shadow-lg hover:shadow-blue-500/50 transition-all border border-blue-400"
                             >
                               Process Toll
                             </button>
@@ -776,13 +776,13 @@ export default function App() {
                 </div>
 
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
-                  <div className="flex items-center gap-4 bg-gray-900 p-2 rounded-2xl border border-amber-500/30 shadow-inner">
+                  <div className="flex items-center gap-4 bg-gray-900 p-2 rounded-2xl border border-blue-500/30 shadow-inner">
                     <motion.button
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={capture}
                       disabled={isProcessing || !camReady}
-                      className="group bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 text-black px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-lg hover:shadow-amber-500/50 transition-all disabled:opacity-40 flex items-center gap-3 border border-amber-400"
+                      className="group bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-black px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-lg hover:shadow-blue-500/50 transition-all disabled:opacity-40 flex items-center gap-3 border border-blue-400"
                     >
                       <Camera className="w-5 h-5" />
                       Take Photo
@@ -795,7 +795,7 @@ export default function App() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isProcessing}
-                      className="group bg-gray-800 hover:bg-gray-700 text-amber-300 px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-sm border border-amber-500/30 transition-all flex items-center gap-3"
+                      className="group bg-gray-800 hover:bg-gray-700 text-blue-300 px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-sm border border-blue-500/30 transition-all flex items-center gap-3"
                     >
                       <Upload className="w-5 h-5" />
                       Upload
@@ -808,7 +808,7 @@ export default function App() {
                       whileTap={{ scale: 0.98 }}
                       onClick={() => setIsManualMode(true)}
                       disabled={isProcessing}
-                      className="group bg-gray-800 hover:bg-gray-700 text-amber-300 px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-lg transition-all flex items-center gap-3 border border-amber-500/30"
+                      className="group bg-gray-800 hover:bg-gray-700 text-blue-300 px-8 py-4 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-lg transition-all flex items-center gap-3 border border-blue-500/30"
                     >
                       <Plus className="w-5 h-5" />
                       Manual Entry
@@ -842,9 +842,9 @@ export default function App() {
             <motion.section 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-amber-500/20 shadow-2xl p-8"
+              className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-blue-500/20 shadow-2xl p-8"
             >
-              <h3 className="text-xl font-bold uppercase tracking-wider mb-8 flex items-center gap-3 text-amber-400">
+              <h3 className="text-xl font-bold uppercase tracking-wider mb-8 flex items-center gap-3 text-blue-400">
                 <ShieldCheck className="w-7 h-7" />
                 Processing Result
               </h3>
@@ -876,14 +876,14 @@ export default function App() {
                       <>
                         {/* New Dedicated ANPR Output Section */}
                         <div className="bg-slate-900 rounded-[2.5rem] p-1 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group">
-                          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-amber-600/10 pointer-events-none" />
+                          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-blue-600/10 pointer-events-none" />
                           <div className="bg-slate-900 rounded-[2.3rem] p-8 md:p-10 border border-white/5 relative z-10">
                             <div className="flex flex-col lg:flex-row items-stretch justify-between gap-10">
                               
                               {/* Left: Plate Visualization */}
                               <div className="flex-1 space-y-8">
                                 <div className="flex items-center justify-between">
-                                  <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full text-xs font-mono uppercase tracking-[0.2em]">
+                                  <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 text-blue-400 rounded-full text-xs font-mono uppercase tracking-[0.2em]">
                                     <Scan className="w-4 h-4" />
                                     OCR Extraction Successful
                                   </span>
@@ -898,8 +898,8 @@ export default function App() {
                                 <div className="space-y-6">
                                   <h3 className="text-gray-400 text-xs font-mono uppercase tracking-widest">Extracted Vehicle Number:</h3>
                                   <div className="relative inline-block w-full group/plate">
-                                    <div className="absolute -inset-4 bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl blur-xl opacity-20 group-hover/plate:opacity-40 transition-opacity" />
-                                    <div className="relative bg-white text-black px-6 md:px-10 py-6 md:py-8 rounded-2xl shadow-2xl border-4 border-amber-400 text-center">
+                                    <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl blur-xl opacity-20 group-hover/plate:opacity-40 transition-opacity" />
+                                    <div className="relative bg-white text-black px-6 md:px-10 py-6 md:py-8 rounded-2xl shadow-2xl border-4 border-blue-400 text-center">
                                       <p className="text-5xl md:text-7xl font-black font-mono tracking-[0.2em] flex items-center justify-center gap-4 break-all">
                                         {recognitionResult.plateNumber || 'NOT DETECTED'}
                                       </p>
@@ -929,8 +929,8 @@ export default function App() {
                                   <div>
                                     <p className="text-xs font-mono uppercase tracking-widest text-gray-500 mb-3">Vehicle Category</p>
                                     <div className="flex items-center gap-4 bg-white/5 px-6 py-4 rounded-2xl border border-white/10">
-                                      <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center">
-                                        <Car className="w-6 h-6 text-amber-400" />
+                                      <div className="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                                        <Car className="w-6 h-6 text-blue-400" />
                                       </div>
                                       <span className="text-2xl font-black text-white uppercase font-mono tracking-wider">{recognitionResult.vehicleType}</span>
                                     </div>
@@ -939,20 +939,20 @@ export default function App() {
                                   <div>
                                     <div className="flex items-center justify-between mb-3">
                                       <p className="text-xs font-mono uppercase tracking-widest text-gray-500">AI Confidence Score</p>
-                                      <span className="text-amber-400 font-mono font-bold">{Math.round(recognitionResult.confidence * (recognitionResult.confidence < 1 ? 100 : 1))}%</span>
+                                      <span className="text-blue-400 font-mono font-bold">{Math.round(recognitionResult.confidence * (recognitionResult.confidence < 1 ? 100 : 1))}%</span>
                                     </div>
                                     <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden border border-white/5">
                                       <motion.div 
                                         initial={{ width: 0 }}
                                         animate={{ width: `${recognitionResult.confidence < 1 ? recognitionResult.confidence * 100 : recognitionResult.confidence}%` }}
-                                        className="h-full bg-gradient-to-r from-amber-500 to-amber-600 shadow-[0_0_10px_rgba(212,175,55,0.5)]" 
+                                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 shadow-[0_0_10px_rgba(59,130,246,0.5)]" 
                                       />
                                     </div>
                                   </div>
                                 </div>
 
                                 <div className="p-6 bg-white/5 rounded-2xl border border-white/10 flex items-center gap-4">
-                                  <div className="w-2 h-2 bg-amber-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+                                  <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.8)]" />
                                   <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest leading-relaxed">
                                     System utilizing Gemini 1.5 Flash Vision OCR with Real-time Sharp Processing
                                   </p>
@@ -966,13 +966,13 @@ export default function App() {
                           <div className={cn(
                             'p-10 rounded-[2.5rem] shadow-2xl border-4 transform transition-all duration-500',
                             lastResult.status === 'approved'
-                              ? 'border-amber-400/50 bg-gray-900/80 shadow-amber-500/30'
+                              ? 'border-blue-400/50 bg-gray-900/80 shadow-blue-500/30'
                               : 'border-red-400/50 bg-gray-900/80 shadow-red-500/30'
                           )}>
                             <div className="flex flex-col md:flex-row items-center gap-10">
                               <div className={`p-8 rounded-3xl shadow-2xl transform hover:scale-110 transition-all ${
                                 lastResult.status === 'approved'
-                                  ? 'bg-amber-500 shadow-amber-500/30'
+                                  ? 'bg-blue-500 shadow-blue-500/30'
                                   : 'bg-red-500 shadow-red-500/30'
                               }`}>
                                 {lastResult.status === 'approved' ? (
@@ -994,16 +994,16 @@ export default function App() {
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={handleQuickRegister}
-                                    className="mt-4 px-6 py-2 bg-amber-500 text-black rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 border border-amber-400 hover:bg-amber-600 transition-all"
+                                    className="mt-4 px-6 py-2 bg-blue-500 text-black rounded-xl text-xs font-bold uppercase tracking-widest flex items-center gap-2 border border-blue-400 hover:bg-blue-600 transition-all"
                                   >
                                     <Plus className="w-4 h-4" />
                                     Register Vehicle Now
                                   </motion.button>
                                 )}
                               </div>
-                              <div className="bg-gray-800 px-8 py-6 rounded-3xl border border-amber-500/30 text-center min-w-[200px]">
+                              <div className="bg-gray-800 px-8 py-6 rounded-3xl border border-blue-500/30 text-center min-w-[200px]">
                                 <span className="text-xs font-mono uppercase tracking-widest text-gray-400 block mb-2">Toll Collected</span>
-                                <p className="text-4xl font-black text-amber-400 font-mono">₹{lastResult.amount}</p>
+                                <p className="text-4xl font-black text-blue-400 font-mono">₹{lastResult.amount}</p>
                               </div>
                             </div>
                           </div>
@@ -1013,14 +1013,14 @@ export default function App() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    className="h-80 rounded-[2.5rem] border-4 border-dashed border-amber-500/30 flex flex-col items-center justify-center text-gray-400 p-12 bg-gray-800/50"
+                    className="h-80 rounded-[2.5rem] border-4 border-dashed border-blue-500/30 flex flex-col items-center justify-center text-gray-400 p-12 bg-gray-800/50"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <div className="w-24 h-24 bg-gray-800 rounded-3xl shadow-xl flex items-center justify-center mb-8 border border-amber-500/30 group hover:scale-110 transition-transform">
-                      <ImageIcon className="w-10 h-10 text-amber-400" />
+                    <div className="w-24 h-24 bg-gray-800 rounded-3xl shadow-xl flex items-center justify-center mb-8 border border-blue-500/30 group hover:scale-110 transition-transform">
+                      <ImageIcon className="w-10 h-10 text-blue-400" />
                     </div>
-                    <h4 className="text-2xl font-black uppercase tracking-[0.2em] mb-4 font-mono text-amber-400">Ready to Analyze</h4>
+                    <h4 className="text-2xl font-black uppercase tracking-[0.2em] mb-4 font-mono text-blue-400">Ready to Analyze</h4>
                     <p className="text-gray-400 font-mono text-center max-w-sm leading-relaxed">
                       Position vehicle in camera view or upload an image to start high-precision extraction
                     </p>
@@ -1035,16 +1035,16 @@ export default function App() {
             id="registry-section"
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-amber-500/20 shadow-2xl p-8 sticky top-24 h-fit"
+            className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-blue-500/20 shadow-2xl p-8 sticky top-24 h-fit"
           >
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-bold uppercase tracking-wider flex items-center gap-3 text-amber-400">
+              <h3 className="text-xl font-bold uppercase tracking-wider flex items-center gap-3 text-blue-400">
                 <UserCheck className="w-7 h-7" />
                 Vehicle Registry
               </h3>
               <button 
                 onClick={() => setShowAddForm(!showAddForm)}
-                className="p-4 bg-gray-800 hover:bg-gray-700 rounded-2xl transition-all shadow-sm hover:shadow-md border border-amber-500/30 flex items-center justify-center group hover:scale-105 text-amber-400"
+                className="p-4 bg-gray-800 hover:bg-gray-700 rounded-2xl transition-all shadow-sm hover:shadow-md border border-blue-500/30 flex items-center justify-center group hover:scale-105 text-blue-400"
               >
                 {showAddForm ? (
                   <ArrowRight className="w-6 h-6 group-hover:rotate-12 transition-transform" />
@@ -1064,7 +1064,7 @@ export default function App() {
                   placeholder="Search by plate or owner..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-800/50 border border-amber-500/30 text-amber-300 pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all font-mono text-sm"
+                  className="w-full bg-gray-800/50 border border-blue-500/30 text-blue-300 pl-12 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono text-sm"
                 />
               </div>
             )}
@@ -1077,7 +1077,7 @@ export default function App() {
                     placeholder="License Plate Number"
                     value={newVehicle.plateNumber}
                     onChange={(e) => setNewVehicle({...newVehicle, plateNumber: e.target.value.toUpperCase()})}
-                    className="w-full px-5 py-4 border border-amber-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-amber-500 focus:border-transparent shadow-sm transition-all bg-gray-800 text-amber-300"
+                    className="w-full px-5 py-4 border border-blue-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all bg-gray-800 text-blue-300"
                     maxLength={12}
                   />
                 </div>
@@ -1086,13 +1086,13 @@ export default function App() {
                   placeholder="Owner Name"
                   value={newVehicle.ownerName}
                   onChange={(e) => setNewVehicle({...newVehicle, ownerName: e.target.value})}
-                  className="w-full px-5 py-4 border border-amber-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-amber-500 focus:border-transparent shadow-sm transition-all bg-gray-800 text-amber-300"
+                  className="w-full px-5 py-4 border border-blue-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all bg-gray-800 text-blue-300"
                 />
                 <div className="grid grid-cols-2 gap-4">
                   <select 
                     value={newVehicle.vehicleType}
                     onChange={(e) => setNewVehicle({...newVehicle, vehicleType: e.target.value as Vehicle['vehicleType']})}
-                    className="px-5 py-4 border border-amber-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-amber-500 focus:border-transparent shadow-sm transition-all appearance-none bg-gray-800 text-amber-300"
+                    className="px-5 py-4 border border-blue-500/30 rounded-2xl font-mono text-lg tracking-wider focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all appearance-none bg-gray-800 text-blue-300"
                   >
                     <option value="car">CAR - ₹50</option>
                     <option value="truck">TRUCK - ₹150</option>
@@ -1103,7 +1103,7 @@ export default function App() {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-mono uppercase text-lg font-bold tracking-wider rounded-2xl shadow-xl hover:shadow-amber-500/50 transition-all border border-amber-400"
+                    className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-black font-mono uppercase text-lg font-bold tracking-wider rounded-2xl shadow-xl hover:shadow-blue-500/50 transition-all border border-blue-400"
                   >
                     Register Vehicle
                   </motion.button>
@@ -1115,7 +1115,7 @@ export default function App() {
                   <motion.div 
                     key={v.plateNumber}
                     layout
-                    className="p-6 border border-amber-500/30 rounded-2xl hover:border-amber-400 hover:shadow-amber-900/50 transition-all group bg-gray-900/70 backdrop-blur-sm"
+                    className="p-6 border border-blue-500/30 rounded-2xl hover:border-blue-400 hover:shadow-blue-900/50 transition-all group bg-gray-900/70 backdrop-blur-sm"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -1130,7 +1130,7 @@ export default function App() {
                           <h4 className="text-xl font-mono font-bold uppercase tracking-tight text-white">{v.plateNumber}</h4>
                           <p className="text-lg opacity-70 mt-1 text-gray-300">{v.ownerName}</p>
                           <p className="text-sm opacity-60 font-mono mt-1 text-gray-400">
-                            Balance: <span className="font-bold text-2xl text-amber-400">₹{v.balance}</span>
+                            Balance: <span className="font-bold text-2xl text-blue-400">₹{v.balance}</span>
                           </p>
                         </div>
                       </div>
@@ -1158,9 +1158,9 @@ export default function App() {
                   </motion.div>
                 ))}
                 {filteredVehicles.length === 0 && (
-                  <div className="p-16 border-2 border-dashed border-amber-500/20 rounded-3xl text-center text-gray-500 bg-gray-900/50">
-                    <UserCheck className="w-20 h-20 mx-auto mb-6 opacity-20 text-amber-500" />
-                    <h4 className="text-2xl font-bold uppercase tracking-wider mb-3 font-mono text-amber-400">No Vehicles Registered</h4>
+                  <div className="p-16 border-2 border-dashed border-blue-500/20 rounded-3xl text-center text-gray-500 bg-gray-900/50">
+                    <UserCheck className="w-20 h-20 mx-auto mb-6 opacity-20 text-blue-500" />
+                    <h4 className="text-2xl font-bold uppercase tracking-wider mb-3 font-mono text-blue-400">No Vehicles Registered</h4>
                     <p className="text-lg opacity-50">Click + to add your first vehicle</p>
                   </div>
                 )}
@@ -1179,7 +1179,7 @@ export default function App() {
           <motion.section 
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-amber-500/20 shadow-2xl p-8 h-[calc(100vh-8rem)] overflow-hidden flex flex-col"
+            className="bg-gray-900/70 backdrop-blur-xl rounded-3xl border border-blue-500/20 shadow-2xl p-8 h-[calc(100vh-8rem)] overflow-hidden flex flex-col"
           >
             <div className="bg-gradient-to-r from-slate-900 to-gray-900 px-6 py-4 rounded-t-3xl flex items-center justify-between">
               <h3 className="text-xl font-bold text-white flex items-center gap-3">
@@ -1202,11 +1202,11 @@ export default function App() {
                     key={`${transaction.plateNumber}-${index}`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="group p-6 rounded-2xl border transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1 bg-gradient-to-r from-gray-900 to-black border-amber-500/20 hover:border-amber-400"
+                    className="group p-6 rounded-2xl border transition-all cursor-pointer hover:shadow-xl hover:-translate-y-1 bg-gradient-to-r from-gray-900 to-black border-blue-500/20 hover:border-blue-400"
                   >
                     <div className="flex items-start justify-between gap-4 mb-4">
                       <div className="min-w-0 flex-1">
-                        <h4 className="text-xl font-mono font-bold uppercase tracking-tight truncate text-amber-400">{transaction.plateNumber}</h4>
+                        <h4 className="text-xl font-mono font-bold uppercase tracking-tight truncate text-blue-400">{transaction.plateNumber}</h4>
                         <p className="text-sm opacity-50 uppercase font-mono mt-1 text-gray-400">{transaction.vehicleType}</p>
                       </div>
                       <div className={`px-4 py-2 rounded-full text-sm font-bold uppercase shadow-md ${
@@ -1221,7 +1221,7 @@ export default function App() {
                       <span className="opacity-40 text-gray-500">{new Date((transaction.timestamp as any)?.seconds * 1000).toLocaleTimeString()}</span>
                       <div className="text-right">
                         <p className="text-[10px] uppercase opacity-30 font-bold mb-0.5 text-gray-500">Entry Revenue</p>
-                        <p className="text-2xl font-bold text-amber-400">₹{transaction.amount}</p>
+                        <p className="text-2xl font-bold text-blue-400">₹{transaction.amount}</p>
                       </div>
                     </div>
                   </motion.div>
@@ -1242,9 +1242,9 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="border-t border-amber-500/10 mt-24 py-12 bg-black/80 backdrop-blur-sm">
+      <footer className="border-t border-blue-500/10 mt-24 py-12 bg-black/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-sm opacity-40 font-mono uppercase tracking-wider text-amber-200/60">
+          <p className="text-sm opacity-40 font-mono uppercase tracking-wider text-blue-200/60">
             Smart Toll AI Gate System • Powered by Google Gemini • Production Ready
           </p>
         </div>

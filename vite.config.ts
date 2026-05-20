@@ -7,7 +7,6 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [react(), tailwindcss()],
-    base: '/Smart-Toll-AI-Gate/',
     build: {
       outDir: 'dist/client',
       emptyOutDir: true,
