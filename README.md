@@ -1,4 +1,4 @@
-# Smart Toll AI Gate 🚗💨
+# AI-SMART-TOLL-GATE 🚗💨
 
 A production-ready Automatic Number Plate Recognition (ANPR) system built with React, TypeScript, and Google Gemini AI.
 
