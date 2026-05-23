@@ -34,8 +34,17 @@
   50% { top: 100%; }
 }
 
+@keyframes gold-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 193, 7, 0.3), inset 0 0 20px rgba(255, 193, 7, 0.05); }
+  50% { box-shadow: 0 0 40px rgba(255, 193, 7, 0.6), inset 0 0 30px rgba(255, 193, 7, 0.1); }
+}
+
 .animate-scan {
   animation: scan 2s ease-in-out infinite;
+}
+
+.animate-gold-glow {
+  animation: gold-glow 3s ease-in-out infinite;
 }
 
 @layer base {
@@ -43,6 +52,7 @@
     @apply bg-dark-900 text-white antialiased;
     cursor: none;
     overflow-x: hidden;
+    background: linear-gradient(135deg, #050505 0%, #0A0A0A 50%, #050505 100%);
   }
   
   /* Show cursor on inputs and elements that need standard interaction */
@@ -77,6 +87,34 @@
   :focus-visible {
     outline: 2px solid #FFC107;
     outline-offset: 2px;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
+  }
+
+  /* Button Premium Styling */
+  button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  button:not(:disabled):hover {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.4);
+  }
+
+  /* Input Premium Styling */
+  input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.3) !important;
+  }
+
+  /* Headings with Gold Gradient */
+  h1, h2, h3, h4, h5, h6 {
+    transition: text-shadow 0.3s ease;
+  }
+
+  .text-gold-400 {
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+  }
+
+  .text-gold-500 {
+    text-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
   }
 }
 
@@ -94,4 +132,18 @@ input, select, textarea, [contenteditable], button, a, label {
 /* Specific fix for elements that might force a system cursor */
 iframe, canvas {
   cursor: none !important;
+}
+
+/* Premium Gold Border Glow for Cards */
+.border-gold-500 {
+  transition: box-shadow 0.3s ease;
+}
+
+.bg-dark-800\/70:hover {
+  box-shadow: 0 0 20px rgba(255, 193, 7, 0.2);
+}
+
+/* Success Message Premium Styling */
+.shadow-\[0_0_60px_rgba\(255\,193\,7\,0\.6\)\] {
+  filter: drop-shadow(0 0 20px rgba(255, 193, 7, 0.8));
 }

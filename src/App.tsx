@@ -51,6 +51,8 @@ export default function App() {
   const [aiMode, setAiMode] = useState<'fast' | 'deep'>('fast');
   const webcamRef = useRef<Webcam>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [steeringRotation, setSteeringRotation] = useState(0);
+  const lastMouseX = useRef(0);
 
   // PDF report downloader
   const downloadPDFReport = useCallback(() => {
@@ -170,6 +172,7 @@ export default function App() {
     setRecognitionResult(null);
     setLastResult(null);
     setSelectedImage(null);
+    setShowDetectionSuccess(false);
   }, []);
 
   useEffect(() => {
@@ -343,6 +346,7 @@ export default function App() {
     setIsProcessing(true);
     setRecognitionResult(null);
     setLastResult(null); // Clear previous transaction result
+    setShowDetectionSuccess(false); // Reset success state for new detection
     
     // FAST LOCAL AI SIMULATION
     if (aiMode === 'fast') {
@@ -353,11 +357,6 @@ export default function App() {
         // Rapid scan progress
         await new Promise(resolve => setTimeout(resolve, 300));
         setProcessStatus('Successfully Detected');
-        setShowDetectionSuccess(true);
-        
-        // Quick Success display
-        await new Promise(resolve => setTimeout(resolve, 800));
-        setShowDetectionSuccess(false);
         
         // Choose plate: either a random registered plate OR a new mock one
         let plateNumber = "TN43AB1234";
@@ -391,9 +390,13 @@ export default function App() {
         setRecognitionResult(mockRecognition);
         const transaction = await processToll(mockRecognition.plateNumber, mockRecognition.vehicleType);
         setLastResult(transaction);
+        
+        // Show success message and keep it visible - no timeout
+        setShowDetectionSuccess(true);
       } catch (error: any) {
         console.error(error);
         setRecognitionResult({ error: error.message || 'Fast processing failed' });
+        setShowDetectionSuccess(false);
       } finally {
         setIsProcessing(false);
         setProcessStatus('');
@@ -413,30 +416,28 @@ export default function App() {
       
       if (recognition.error && !recognition.plateNumber) {
         setRecognitionResult({ error: recognition.error });
-        return;
+        setShowDetectionSuccess(false);
+        throw new Error(recognition.error || 'Detection failed');
       }
       
-      // Show "Successfully Detected" banner immediately
-      setProcessStatus('Successfully Detected');
-      setShowDetectionSuccess(true);
-      
-      // Brief pause to let user see the success state
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setShowDetectionSuccess(false);
-      
-      setProcessStatus('Finalizing result...');
-      
+      // Set recognition result
       setRecognitionResult(recognition);
 
       if (!recognition.plateNumber) {
+        setShowDetectionSuccess(false);
         return;
       }
 
       const transaction = await processToll(recognition.plateNumber, recognition.vehicleType);
       setLastResult(transaction);
+      
+      // Show success message and keep it visible - no timeout
+      setProcessStatus('Successfully Detected');
+      setShowDetectionSuccess(true);
     } catch (error: any) {
       console.error(error);
       setRecognitionResult({ error: error.message || 'Processing failed' });
+      setShowDetectionSuccess(false);
     } finally {
       setIsProcessing(false);
       setProcessStatus('');
@@ -504,6 +505,10 @@ export default function App() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
+      const deltaX = e.clientX - lastMouseX.current;
+      const targetRotation = Math.max(-45, Math.min(45, deltaX * 1.6));
+      setSteeringRotation(targetRotation);
+      lastMouseX.current = e.clientX;
     };
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -537,27 +542,49 @@ export default function App() {
   const renderCursor = () => (
     <>
       <motion.div 
-        className="fixed top-0 left-0 w-6 h-6 border-2 border-gold-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 pointer-events-none z-[9999] hidden md:block"
+        style={{ width: 44, height: 44 }}
         animate={{ 
-          x: mousePos.x - 12, 
-          y: mousePos.y - 12,
-          scale: isInput ? 0.5 : (isHovering ? 2.5 : 1),
-          borderRadius: isInput ? '2px' : '50%',
-          width: isInput ? '2px' : '24px',
-          height: isInput ? '24px' : '24px',
-          borderWidth: isInput ? '0px' : '2px',
-          backgroundColor: isInput ? '#FFC107' : (isHovering ? 'rgba(212, 175, 55, 0.2)' : 'rgba(212, 175, 55, 0)')
+          x: mousePos.x - 22, 
+          y: mousePos.y - 22,
+          rotate: steeringRotation,
+          scale: isInput ? 0.6 : (isHovering ? 1.4 : 1)
         }}
-        transition={{ type: 'spring', damping: 25, stiffness: 250, mass: 0.5 }}
-      />
+        transition={{ 
+          rotate: { type: 'spring', damping: 15, stiffness: 120 },
+          x: { type: 'spring', damping: 28, stiffness: 350, mass: 0.15 },
+          y: { type: 'spring', damping: 28, stiffness: 350, mass: 0.15 }
+        }}
+      >
+        <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Steering Wheel Outer Ring */}
+          <circle cx="50" cy="50" r="44" stroke="#FFC107" strokeWidth="6" fill="rgba(10,10,10,0.7)" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 193, 7, 0.6))' }} />
+          <circle cx="50" cy="50" r="41" stroke="#806600" strokeWidth="1" />
+          
+          {/* Grip markers */}
+          <path d="M 12 50 A 38 38 0 0 1 88 50" stroke="#FFD700" strokeWidth="2" strokeDasharray="8 6" />
+          
+          {/* Center Hub */}
+          <circle cx="50" cy="50" r="16" fill="#151515" stroke="#FFC107" strokeWidth="3" />
+          <circle cx="50" cy="50" r="7" fill="#FFC107" />
+          
+          {/* Spokes */}
+          <path d="M 6 50 L 34 50" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
+          <path d="M 66 50 L 94 50" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
+          <path d="M 50 66 L 50 94" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
+          
+          {/* Top Racing Stripe Marker */}
+          <rect x="47" y="2" width="6" height="8" fill="#FFD700" rx="1.5" />
+        </svg>
+      </motion.div>
       <motion.div 
-        className="fixed top-0 left-0 w-1.5 h-1.5 bg-gold-500 rounded-full pointer-events-none z-[9999] hidden md:block"
+        className="fixed top-0 left-0 w-2 h-2 bg-gold-400 rounded-full pointer-events-none z-[9999] hidden md:block"
         animate={{ 
-          x: mousePos.x - 3, 
-          y: mousePos.y - 3,
+          x: mousePos.x - 4, 
+          y: mousePos.y - 4,
           scale: (isHovering || isInput) ? 0 : 1
         }}
-        transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.2 }}
+        transition={{ type: 'spring', damping: 20, stiffness: 300, mass: 0.1 }}
       />
     </>
   );
@@ -911,21 +938,21 @@ export default function App() {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 1.2 }}
                             transition={{ type: 'spring', damping: 15, stiffness: 200 }}
-                            className="flex flex-col items-center"
+                            className="flex flex-col items-center w-full max-w-sm"
                           >
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
                               transition={{ type: 'spring', damping: 10, stiffness: 200, delay: 0.1 }}
-                              className="w-28 h-28 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(16,185,129,0.6)] mb-8"
+                              className="w-28 h-28 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(255,193,7,0.6)] mb-8 border border-gold-300/30"
                             >
-                              <CheckCircle2 className="w-14 h-14 text-white" />
+                              <CheckCircle2 className="w-14 h-14 text-black font-black" />
                             </motion.div>
                             <motion.h3
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="text-4xl font-black uppercase tracking-[0.15em] text-emerald-400 mb-3"
+                              className="text-4xl font-black uppercase tracking-[0.15em] text-gold-400 mb-3"
                             >
                               Successfully Detected
                             </motion.h3>
@@ -933,7 +960,7 @@ export default function App() {
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.5 }}
-                              className="text-sm font-mono text-emerald-300/70 uppercase tracking-widest"
+                              className="text-sm font-mono text-gold-200/80 uppercase tracking-widest mb-8"
                             >
                               Vehicle identified • Processing toll
                             </motion.p>
@@ -941,8 +968,19 @@ export default function App() {
                               initial={{ width: 0 }}
                               animate={{ width: '200px' }}
                               transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.2 }}
-                              className="h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full mt-6"
+                              className="h-1 bg-gradient-to-r from-transparent via-gold-400 to-transparent rounded-full mb-8"
                             />
+                            <motion.button
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.7 }}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={resetState}
+                              className="bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-black px-8 py-3 rounded-xl font-mono uppercase text-sm font-bold tracking-widest shadow-lg hover:shadow-gold-500/50 transition-all border border-gold-400"
+                            >
+                              Try Again
+                            </motion.button>
                           </motion.div>
                         ) : (
                           <motion.div
@@ -1145,6 +1183,15 @@ export default function App() {
                       </div>
                     ) : (
                       <>
+                        {/* Persistent Successfully Detected Banner */}
+                        <motion.div 
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="bg-gold-500/10 border border-gold-500/30 rounded-2xl p-4 flex items-center justify-center gap-3 text-gold-400 mb-6 shadow-[inset_0_1px_20px_rgba(255,193,7,0.05)]"
+                        >
+                          <CheckCircle2 className="w-5 h-5 text-gold-400 animate-pulse" />
+                          <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">Successfully Detected & Verified by AI Gate</span>
+                        </motion.div>
                         {/* New Dedicated ANPR Output Section */}
                         <div className="bg-dark-800 rounded-[2.5rem] p-1 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group">
                           <div className="absolute inset-0 bg-gradient-to-br from-gold-500/10 via-transparent to-gold-600/10 pointer-events-none" />
@@ -1238,24 +1285,24 @@ export default function App() {
                             'p-10 rounded-[2.5rem] shadow-2xl border-4 transform transition-all duration-500',
                             lastResult.status === 'approved'
                               ? 'border-gold-400/50 bg-dark-800/80 shadow-gold-500/30'
-                              : 'border-red-400/50 bg-dark-800/80 shadow-red-500/30'
+                              : 'border-gold-800/40 bg-dark-800/80 shadow-gold-950/20'
                           )}>
                             <div className="flex flex-col md:flex-row items-center gap-10">
                               <div className={`p-8 rounded-3xl shadow-2xl transform hover:scale-110 transition-all ${
                                 lastResult.status === 'approved'
-                                  ? 'bg-gold-500 shadow-gold-500/30'
-                                  : 'bg-red-500 shadow-red-500/30'
+                                  ? 'bg-gold-500 shadow-gold-500/30 text-black'
+                                  : 'bg-gold-800 shadow-gold-800/30 text-gold-100'
                               }`}>
                                 {lastResult.status === 'approved' ? (
-                                  <CheckCircle2 className="w-12 h-12 text-white" />
+                                  <CheckCircle2 className="w-12 h-12" />
                                 ) : (
-                                  <XCircle className="w-12 h-12 text-white" />
+                                  <XCircle className="w-12 h-12" />
                                 )}
                               </div>
                               <div className="flex-1 text-center md:text-left">
                                 <h4 className={cn(
                                   "text-4xl font-black uppercase tracking-widest mb-2 font-mono",
-                                  lastResult.status === 'approved' ? "text-gold-600" : "text-red-600"
+                                  lastResult.status === 'approved' ? "text-gold-500" : "text-gold-600 font-bold"
                                 )}>
                                   {lastResult.status === 'approved' ? 'GATE OPEN' : 'ACCESS DENIED'}
                                 </h4>
