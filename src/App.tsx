@@ -3,7 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth, loginAnonymously } from './lib/firebase';
 import Webcam from 'react-webcam';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, RotateCcw, CheckCircle2, XCircle, History, ShieldCheck, Car, LogOut, LogIn, Database, ArrowRight, UserCheck, Plus, Search, RefreshCw, Power, ShieldAlert, Trash2, Upload, Image as ImageIcon, Scan, AlertCircle } from 'lucide-react';
+import { Camera, RotateCcw, CheckCircle2, XCircle, History, ShieldCheck, Car, LogOut, LogIn, Database, ArrowRight, UserCheck, Plus, Search, RefreshCw, Power, ShieldAlert, Trash2, Upload, Image as ImageIcon, Scan, AlertCircle, Download, FileText } from 'lucide-react';
 import type { User } from 'firebase/auth';
 import { recognizeLicensePlate } from './services/geminiService';
 import type { Transaction, Vehicle } from './types';
@@ -47,6 +47,7 @@ export default function App() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [recognitionResult, setRecognitionResult] = useState<any>(null);
   const [processStatus, setProcessStatus] = useState('');
+  const [showDetectionSuccess, setShowDetectionSuccess] = useState(false);
   const webcamRef = useRef<Webcam>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -243,6 +244,14 @@ export default function App() {
         setRecognitionResult({ error: recognition.error });
         return;
       }
+      
+      // Show "Successfully Detected" banner immediately
+      setProcessStatus('Successfully Detected');
+      setShowDetectionSuccess(true);
+      
+      // Brief pause to let user see the success state
+      await new Promise(resolve => setTimeout(resolve, 1800));
+      setShowDetectionSuccess(false);
       
       setProcessStatus('Finalizing result...');
       
@@ -682,32 +691,82 @@ export default function App() {
 
                   {isProcessing && (
                     <div className="absolute inset-0 bg-dark-900/80 flex flex-col items-center justify-center z-20 text-white backdrop-blur-sm">
-                      <motion.div 
-                        className="relative w-32 h-32"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                      >
-                        <div className="absolute inset-0 border-4 border-gold-400/20 rounded-full" />
-                        <motion.div 
-                          className="absolute inset-0 border-4 border-gold-400 border-t-transparent rounded-full"
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        />
-                        <div className="absolute inset-4 bg-gold-500/10 rounded-full flex items-center justify-center">
-                          <Scan className="w-10 h-10 text-gold-400 animate-pulse" />
-                        </div>
-                      </motion.div>
-                      <div className="text-center mt-10">
-                        <h3 className="text-3xl font-black uppercase tracking-[0.2em] mb-4 bg-gradient-to-r from-gold-400 to-gold-300 bg-clip-text text-transparent">
-                          {processStatus}
-                        </h3>
-                        <div className="flex items-center justify-center gap-4 text-sm font-mono opacity-70">
-                          <span className="flex items-center gap-2">
-                            <RefreshCw className="w-4 h-4 animate-spin" />
-                            AI Turbo Engine
-                          </span>
-                        </div>
-                      </div>
+                      <AnimatePresence mode="wait">
+                        {showDetectionSuccess ? (
+                          <motion.div
+                            key="success"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.2 }}
+                            transition={{ type: 'spring', damping: 15, stiffness: 200 }}
+                            className="flex flex-col items-center"
+                          >
+                            <motion.div
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{ type: 'spring', damping: 10, stiffness: 200, delay: 0.1 }}
+                              className="w-28 h-28 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center shadow-[0_0_60px_rgba(16,185,129,0.6)] mb-8"
+                            >
+                              <CheckCircle2 className="w-14 h-14 text-white" />
+                            </motion.div>
+                            <motion.h3
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 }}
+                              className="text-4xl font-black uppercase tracking-[0.15em] text-emerald-400 mb-3"
+                            >
+                              Successfully Detected
+                            </motion.h3>
+                            <motion.p
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: 0.5 }}
+                              className="text-sm font-mono text-emerald-300/70 uppercase tracking-widest"
+                            >
+                              Vehicle identified • Processing toll
+                            </motion.p>
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: '200px' }}
+                              transition={{ duration: 1.5, ease: 'easeInOut', delay: 0.2 }}
+                              className="h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent rounded-full mt-6"
+                            />
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="processing"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex flex-col items-center"
+                          >
+                            <motion.div 
+                              className="relative w-32 h-32"
+                            >
+                              <div className="absolute inset-0 border-4 border-gold-400/20 rounded-full" />
+                              <motion.div 
+                                className="absolute inset-0 border-4 border-gold-400 border-t-transparent rounded-full"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              />
+                              <div className="absolute inset-4 bg-gold-500/10 rounded-full flex items-center justify-center">
+                                <Scan className="w-10 h-10 text-gold-400 animate-pulse" />
+                              </div>
+                            </motion.div>
+                            <div className="text-center mt-10">
+                              <h3 className="text-3xl font-black uppercase tracking-[0.2em] mb-4 bg-gradient-to-r from-gold-400 to-gold-300 bg-clip-text text-transparent">
+                                {processStatus}
+                              </h3>
+                              <div className="flex items-center justify-center gap-4 text-sm font-mono opacity-70">
+                                <span className="flex items-center gap-2">
+                                  <RefreshCw className="w-4 h-4 animate-spin" />
+                                  AI Turbo Engine
+                                </span>
+                              </div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   )}
 
@@ -1186,13 +1245,135 @@ export default function App() {
                 <History className="w-7 h-7" />
                 Recent Transactions
               </h3>
-              <button 
-                onClick={handleClearHistory}
-                className="p-2 text-white/50 hover:text-white transition-colors"
-                title="Clear All"
-              >
-                <Trash2 className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {history.length > 0 && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      // Generate PDF report
+                      const totalRevenue = history.filter(t => t.status === 'approved').reduce((acc, t) => acc + t.amount, 0);
+                      const approvedCount = history.filter(t => t.status === 'approved').length;
+                      const rejectedCount = history.filter(t => t.status === 'rejected').length;
+                      const reportDate = new Date().toLocaleString();
+                      
+                      // Build styled HTML for PDF
+                      const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SmartToll AI - Vehicle Detection Report</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0A0A0A; color: #fff; padding: 40px; }
+    .header { text-align: center; padding: 40px 0; border-bottom: 2px solid rgba(255,193,7,0.3); margin-bottom: 30px; }
+    .header h1 { font-size: 32px; font-weight: 900; background: linear-gradient(to right, #FFC107, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 2px; }
+    .header p { color: rgba(255,255,255,0.5); font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin-top: 8px; }
+    .stats { display: flex; gap: 20px; margin: 30px 0; }
+    .stat-card { flex: 1; background: #111; border: 1px solid rgba(255,193,7,0.2); border-radius: 16px; padding: 24px; text-align: center; }
+    .stat-card .label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,193,7,0.6); }
+    .stat-card .value { font-size: 28px; font-weight: 900; color: #FFC107; font-family: 'JetBrains Mono', monospace; margin-top: 8px; }
+    .stat-card .value.green { color: #10B981; }
+    .stat-card .value.red { color: #EF4444; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 30px; }
+    th { background: #111; color: #FFC107; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; padding: 16px; text-align: left; border-bottom: 2px solid rgba(255,193,7,0.3); }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.05); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+    tr:hover td { background: rgba(255,193,7,0.03); }
+    .plate { font-weight: 700; letter-spacing: 2px; color: #FFC107; font-size: 14px; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .badge.approved { background: rgba(255,193,7,0.15); color: #FFC107; border: 1px solid rgba(255,193,7,0.3); }
+    .badge.rejected { background: rgba(239,68,68,0.15); color: #EF4444; border: 1px solid rgba(239,68,68,0.3); }
+    .footer { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); font-size: 11px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 2px; }
+    .type-badge { display: inline-block; padding: 3px 10px; border-radius: 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+    @media print { body { background: white; color: #111; } .header h1 { color: #B38F00; -webkit-text-fill-color: #B38F00; } .stat-card { border-color: #ccc; } th { background: #f5f5f5; color: #B38F00; } .plate { color: #B38F00; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>\u2B50 SmartToll AI - Detection Report</h1>
+    <p>Generated on ${reportDate}</p>
+  </div>
+  
+  <div class="stats">
+    <div class="stat-card">
+      <div class="label">Total Transactions</div>
+      <div class="value">${history.length}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Total Revenue</div>
+      <div class="value">\u20B9${totalRevenue}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Approved</div>
+      <div class="value green">${approvedCount}</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Rejected</div>
+      <div class="value red">${rejectedCount}</div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>License Plate</th>
+        <th>Vehicle Type</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Reason</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${history.map((t, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td class="plate">${t.plateNumber}</td>
+          <td><span class="type-badge">${t.vehicleType}</span></td>
+          <td>\u20B9${t.amount}</td>
+          <td><span class="badge ${t.status}">${t.status}</span></td>
+          <td>${t.reason || '-'}</td>
+          <td>${new Date(((t.timestamp as any)?.seconds || 0) * 1000).toLocaleString()}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  
+  <div class="footer">
+    Smart Toll AI Gate System &bull; Powered by Google Gemini &bull; Confidential Report
+  </div>
+</body>
+</html>`;
+                      
+                      // Open print dialog for PDF
+                      const printWindow = window.open('', '_blank');
+                      if (printWindow) {
+                        printWindow.document.write(htmlContent);
+                        printWindow.document.close();
+                        // Give fonts time to load before printing
+                        setTimeout(() => {
+                          printWindow.print();
+                        }, 800);
+                      }
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-gold-500/20 to-gold-600/20 hover:from-gold-500/30 hover:to-gold-600/30 text-gold-400 rounded-xl text-xs font-mono uppercase tracking-widest transition-all flex items-center gap-2 border border-gold-500/30 hover:border-gold-400/50 shadow-sm hover:shadow-gold-500/20"
+                    title="Download PDF Report"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="hidden sm:inline">PDF Report</span>
+                  </motion.button>
+                )}
+                <button 
+                  onClick={handleClearHistory}
+                  className="p-2 text-white/50 hover:text-white transition-colors"
+                  title="Clear All"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             <div className="space-y-4 p-6 mt-6 overflow-y-auto flex-1">
