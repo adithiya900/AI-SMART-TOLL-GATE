@@ -557,24 +557,54 @@ export default function App() {
         }}
       >
         <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* Steering Wheel Outer Ring */}
-          <circle cx="50" cy="50" r="44" stroke="#FFC107" strokeWidth="6" fill="rgba(10,10,10,0.7)" style={{ filter: 'drop-shadow(0 0 8px rgba(255, 193, 7, 0.6))' }} />
-          <circle cx="50" cy="50" r="41" stroke="#806600" strokeWidth="1" />
+          {/* Outer Racing Ring with Red Accent */}
+          <circle cx="50" cy="50" r="44" stroke="#FF4500" strokeWidth="8" fill="rgba(10,10,10,0.8)" style={{ filter: 'drop-shadow(0 0 12px rgba(255, 69, 0, 0.8))' }} />
+          <circle cx="50" cy="50" r="44" stroke="#FFC107" strokeWidth="3" fill="none" opacity="0.6" />
+          <circle cx="50" cy="50" r="41" stroke="#FFD700" strokeWidth="1" />
           
-          {/* Grip markers */}
-          <path d="M 12 50 A 38 38 0 0 1 88 50" stroke="#FFD700" strokeWidth="2" strokeDasharray="8 6" />
+          {/* Inner Carbon Fiber Ring */}
+          <circle cx="50" cy="50" r="38" fill="url(#carbonPattern)" opacity="0.7" />
           
-          {/* Center Hub */}
-          <circle cx="50" cy="50" r="16" fill="#151515" stroke="#FFC107" strokeWidth="3" />
-          <circle cx="50" cy="50" r="7" fill="#FFC107" />
+          {/* Aggressive Racing Spokes - 4 Point Design */}
+          <path d="M 50 8 L 50 32" stroke="#FF4500" strokeWidth="6" strokeLinecap="round" />
+          <path d="M 50 68 L 50 92" stroke="#FF4500" strokeWidth="6" strokeLinecap="round" />
+          <path d="M 8 50 L 32 50" stroke="#FF4500" strokeWidth="6" strokeLinecap="round" />
+          <path d="M 68 50 L 92 50" stroke="#FF4500" strokeWidth="6" strokeLinecap="round" />
           
-          {/* Spokes */}
-          <path d="M 6 50 L 34 50" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
-          <path d="M 66 50 L 94 50" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
-          <path d="M 50 66 L 50 94" stroke="#FFC107" strokeWidth="5" strokeLinecap="round" />
+          {/* Gold Accent Spokes */}
+          <path d="M 38 20 L 55 37" stroke="#FFD700" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 62 38 L 80 20" stroke="#FFD700" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 80 80 L 62 62" stroke="#FFD700" strokeWidth="4" strokeLinecap="round" />
+          <path d="M 37 63 L 20 80" stroke="#FFD700" strokeWidth="4" strokeLinecap="round" />
           
-          {/* Top Racing Stripe Marker */}
-          <rect x="47" y="2" width="6" height="8" fill="#FFD700" rx="1.5" />
+          {/* Grip Texture Markers */}
+          <circle cx="35" cy="50" r="3" fill="#FFD700" />
+          <circle cx="65" cy="50" r="3" fill="#FFD700" />
+          <circle cx="50" cy="35" r="3" fill="#FFD700" />
+          <circle cx="50" cy="65" r="3" fill="#FFD700" />
+          
+          {/* Racing Grip Sections */}
+          <path d="M 20 40 Q 15 50 20 60" stroke="#FF4500" strokeWidth="3" fill="none" />
+          <path d="M 80 40 Q 85 50 80 60" stroke="#FF4500" strokeWidth="3" fill="none" />
+          
+          {/* Center Hub - Aggressive Design */}
+          <circle cx="50" cy="50" r="18" fill="#0A0A0A" stroke="#FF4500" strokeWidth="4" />
+          <circle cx="50" cy="50" r="14" fill="#1A1A1A" stroke="#FFC107" strokeWidth="2" />
+          <circle cx="50" cy="50" r="8" fill="#FF4500" />
+          <circle cx="50" cy="50" r="4" fill="#FFD700" />
+          
+          {/* Racing Performance Badge */}
+          <rect x="46" y="2" width="8" height="10" fill="#FF4500" rx="2" style={{ filter: 'drop-shadow(0 0 6px rgba(255, 69, 0, 0.8))' }} />
+          <rect x="47" y="3" width="6" height="8" fill="#FFD700" />
+          
+          {/* Define Carbon Fiber Pattern */}
+          <defs>
+            <pattern id="carbonPattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="10" height="10" fill="#0A0A0A" />
+              <line x1="0" y1="0" x2="10" y2="10" stroke="#1A1A1A" strokeWidth="0.5" opacity="0.5" />
+              <line x1="10" y1="0" x2="0" y2="10" stroke="#1A1A1A" strokeWidth="0.5" opacity="0.5" />
+            </pattern>
+          </defs>
         </svg>
       </motion.div>
       <motion.div 
@@ -847,13 +877,24 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-dark-800/70 backdrop-blur-xl rounded-3xl border border-gold-500/20 shadow-2xl overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-dark-900 to-dark-800/80 px-8 py-6 border-b border-gold-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="bg-gradient-to-r from-dark-900 to-dark-800/80 px-8 py-6 border-b border-gold-500/20 flex flex-col md:flex-row md:items-center justify-between gap-4 relative">
+                {showDetectionSuccess && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="absolute -top-3 -left-3 bg-gradient-to-r from-red-600 to-orange-600 text-white px-4 py-2 rounded-full font-mono text-xs font-black tracking-[0.3em] shadow-[0_0_20px_rgba(255,100,0,0.6)] border border-red-400/50"
+                  >
+                    🚀 TURBO ENGAGED
+                  </motion.div>
+                )}
                 <div>
                   <h2 className="text-2xl font-black text-gold-400 flex items-center gap-4">
                     <Camera className="w-8 h-8" />
-                    Live Detection
+                    {showDetectionSuccess ? 'Turbo AI Engine' : 'Live Detection'}
                   </h2>
-                  <p className="text-gold-200/60 text-sm font-mono uppercase tracking-widest opacity-80">Real-time license plate recognition</p>
+                  <p className="text-gold-200/60 text-sm font-mono uppercase tracking-widest opacity-80">
+                    {showDetectionSuccess ? 'Vehicle captured • High-Performance Analysis' : 'Real-time license plate recognition'}
+                  </p>
                 </div>
                 
                 {/* AI Mode Selector Toggle */}
@@ -884,24 +925,28 @@ export default function App() {
               </div>
 
               <div className="p-8 relative">
-                <div className="aspect-video bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 relative">
-                  <Webcam
-                    audio={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    onUserMedia={() => setCamReady(true)}
-                    className="w-full h-full object-cover"
-                    videoConstraints={{
-                      width: { ideal: 1920 },
-                      height: { ideal: 1080 },
-                      facingMode: 'environment'
-                    }}
-                  />
+                <div className="aspect-video bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10 relative group">
+                  {/* Show Webcam only if no detection or not in success state */}
+                  {!selectedImage && !showDetectionSuccess && (
+                    <Webcam
+                      audio={false}
+                      ref={webcamRef}
+                      screenshotFormat="image/jpeg"
+                      onUserMedia={() => setCamReady(true)}
+                      className="w-full h-full object-cover"
+                      videoConstraints={{
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 },
+                        facingMode: 'environment'
+                      }}
+                    />
+                  )}
                   
+                  {/* Detected Image - Stays after successful detection */}
                   {selectedImage && (
-                    <div className="absolute inset-0 z-10 bg-dark-900">
+                    <div className="absolute inset-0 z-10 bg-dark-900 flex flex-col">
                       <img src={selectedImage} alt="Captured" className="w-full h-full object-contain" />
-                      {recognitionResult?.boundingBox && (
+                      {recognitionResult?.boundingBox && !showDetectionSuccess && (
                         <div 
                           className="absolute border-4 border-gold-400 shadow-[0_0_20px_rgba(255,193,7,0.8)] rounded-sm pointer-events-none transition-all duration-500"
                           style={{
@@ -916,11 +961,39 @@ export default function App() {
                           </div>
                         </div>
                       )}
+                      
+                      {/* Performance Metrics Overlay */}
+                      {showDetectionSuccess && recognitionResult && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60 pointer-events-none flex flex-col justify-between p-6"
+                        >
+                          {/* Top Metrics */}
+                          <div className="flex justify-between items-start">
+                            <div className="space-y-2">
+                              <div className="text-gold-400 font-mono text-xs uppercase tracking-[0.2em] font-black">Turbo Status</div>
+                              <div className="text-gold-300 font-mono text-2xl font-black">✓ LOCKED</div>
+                            </div>
+                            <div className="text-right space-y-2">
+                              <div className="text-gold-400 font-mono text-xs uppercase tracking-[0.2em] font-black">Confidence</div>
+                              <div className="text-gold-300 font-mono text-2xl font-black">{Math.round((recognitionResult?.confidence || 0) * 100)}%</div>
+                            </div>
+                          </div>
+                          
+                          {/* Bottom Plate Info */}
+                          <div className="bg-dark-900/80 backdrop-blur-md border-2 border-gold-500/50 rounded-xl p-4 border-t-4 border-t-gold-500">
+                            <div className="text-gold-400 font-mono text-[10px] uppercase tracking-[0.3em] font-black mb-2">Detected Plate</div>
+                            <div className="text-gold-200 font-mono text-3xl font-black tracking-[0.2em] text-center">{recognitionResult?.plateNumber || 'SCANNING'}</div>
+                            <div className="text-gold-400 font-mono text-xs uppercase tracking-[0.2em] mt-3 text-center">{recognitionResult?.vehicleType || 'unknown'}</div>
+                          </div>
+                        </motion.div>
+                      )}
                     </div>
                   )}
 
-                  {/* Scan overlay */}
-                  {!selectedImage && (
+                  {/* Scan overlay - Only show during processing without success */}
+                  {!selectedImage && !showDetectionSuccess && (
                     <div className="absolute inset-0 pointer-events-none">
                       <div className="absolute top-1/4 left-1/4 right-1/4 bottom-1/4 border-4 border-gold-400/30 rounded-2xl" />
                       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,193,7,0.05)0%,transparent_60%)] animate-pulse" />
@@ -928,7 +1001,8 @@ export default function App() {
                     </div>
                   )}
 
-                  {isProcessing && (
+                  {/* Processing Overlay - Only during active processing */}
+                  {isProcessing && !showDetectionSuccess && (
                     <div className="absolute inset-0 bg-dark-900/80 flex flex-col items-center justify-center z-20 text-white backdrop-blur-sm">
                       <AnimatePresence mode="wait">
                         {showDetectionSuccess ? (

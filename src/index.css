@@ -39,12 +39,51 @@
   50% { box-shadow: 0 0 40px rgba(255, 193, 7, 0.6), inset 0 0 30px rgba(255, 193, 7, 0.1); }
 }
 
+@keyframes turbo-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(255, 69, 0, 0.3), inset 0 0 15px rgba(255, 69, 0, 0.05); }
+  50% { box-shadow: 0 0 30px rgba(255, 69, 0, 0.8), inset 0 0 25px rgba(255, 69, 0, 0.15); }
+}
+
+@keyframes race-shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+@keyframes drift-effect {
+  0%, 100% { transform: skewX(0deg); }
+  50% { transform: skewX(2deg); }
+}
+
+@keyframes engine-rev {
+  0%, 100% { text-shadow: 0 0 5px rgba(255, 69, 0, 0.3); }
+  50% { text-shadow: 0 0 15px rgba(255, 69, 0, 0.8); }
+}
+
 .animate-scan {
   animation: scan 2s ease-in-out infinite;
 }
 
 .animate-gold-glow {
   animation: gold-glow 3s ease-in-out infinite;
+}
+
+.animate-turbo {
+  animation: turbo-pulse 2s ease-in-out infinite;
+}
+
+.animate-race-shimmer {
+  animation: race-shimmer 3s linear infinite;
+  background-size: 1000px 100%;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 193, 7, 0),
+    rgba(255, 193, 7, 0.3),
+    rgba(255, 193, 7, 0)
+  );
+}
+
+.animate-engine-rev {
+  animation: engine-rev 1.5s ease-in-out infinite;
 }
 
 @layer base {
@@ -116,6 +155,19 @@
   .text-gold-500 {
     text-shadow: 0 0 15px rgba(255, 193, 7, 0.4);
   }
+
+  /* Turbo AI Engine Branding */
+  .turbo-badge {
+    background: linear-gradient(135deg, #FF4500 0%, #FF6347 100%);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.6);
+    border: 2px solid #FFD700;
+  }
+
+  /* Performance Metrics */
+  .performance-metric {
+    @apply font-mono font-black text-gold-400;
+    animation: engine-rev 1.5s ease-in-out infinite;
+  }
 }
 
 /* Hide cursor globally for the custom cursor to shine */
@@ -146,4 +198,16 @@ iframe, canvas {
 /* Success Message Premium Styling */
 .shadow-\[0_0_60px_rgba\(255\,193\,7\,0\.6\)\] {
   filter: drop-shadow(0 0 20px rgba(255, 193, 7, 0.8));
+}
+
+/* Turbo Engine Display */
+.turbo-display {
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+  border: 2px solid rgba(255, 69, 0, 0.5);
+  box-shadow: inset 0 0 30px rgba(255, 69, 0, 0.1), 0 0 30px rgba(255, 69, 0, 0.2);
+}
+
+/* Race Car Steering Wheel Cursor Glow */
+.steering-wheel-cursor {
+  filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.6));
 }
