@@ -348,63 +348,6 @@ export default function App() {
     setLastResult(null); // Clear previous transaction result
     setShowDetectionSuccess(false); // Reset success state for new detection
     
-    // FAST LOCAL AI SIMULATION
-    if (aiMode === 'fast') {
-      setProcessStatus('Scanning Image...');
-      try {
-        setSelectedImage(imageSrc);
-        
-        // Rapid scan progress
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setProcessStatus('Successfully Detected');
-        
-        // Choose plate: either a random registered plate OR a new mock one
-        let plateNumber = "TN43AB1234";
-        let vehicleType: 'car' | 'truck' | 'bus' | 'motorcycle' = 'car';
-        
-        if (vehicles.length > 0) {
-          const randomIndex = Math.floor(Math.random() * vehicles.length);
-          const chosenVehicle = vehicles[randomIndex];
-          plateNumber = chosenVehicle.plateNumber;
-          vehicleType = chosenVehicle.vehicleType;
-        } else {
-          const mocks = [
-            { plate: "TN43AB1234", type: "car" },
-            { plate: "KA01ME5678", type: "motorcycle" },
-            { plate: "DL10C9999", type: "bus" },
-            { plate: "MH02XY1234", type: "truck" }
-          ];
-          const chosen = mocks[Math.floor(Math.random() * mocks.length)];
-          plateNumber = chosen.plate;
-          vehicleType = chosen.type as any;
-        }
-        
-        const mockRecognition = {
-          plateNumber: plateNumber.toUpperCase(),
-          vehicleType: vehicleType,
-          confidence: 0.98 + Math.random() * 0.02,
-          boundingBox: { ymin: 420, xmin: 280, ymax: 560, xmax: 680 },
-          processingTime: '0.15s (Local AI)'
-        };
-        
-        setRecognitionResult(mockRecognition);
-        const transaction = await processToll(mockRecognition.plateNumber, mockRecognition.vehicleType);
-        setLastResult(transaction);
-        
-        // Show success message and keep it visible - no timeout
-        setShowDetectionSuccess(true);
-      } catch (error: any) {
-        console.error(error);
-        setRecognitionResult({ error: error.message || 'Fast processing failed' });
-        setShowDetectionSuccess(false);
-      } finally {
-        setIsProcessing(false);
-        setProcessStatus('');
-      }
-      return;
-    }
-
-    // DEEP DECTECTION MODE (GEMINI API)
     setProcessStatus('Optimizing image...');
     
     try {
@@ -413,6 +356,12 @@ export default function App() {
       setProcessStatus('Uploading to AI Engine...');
       
       const recognition = await recognizeLicensePlate(compressedImage);
+      
+      if (recognition.vehicleDetected === false) {
+        setRecognitionResult({ error: 'No Vehicle Detected' });
+        setShowDetectionSuccess(false);
+        return;
+      }
       
       if (recognition.error && !recognition.plateNumber) {
         setRecognitionResult({ error: recognition.error });
@@ -424,6 +373,7 @@ export default function App() {
       setRecognitionResult(recognition);
 
       if (!recognition.plateNumber) {
+        setRecognitionResult({ error: 'No Vehicle Detected' });
         setShowDetectionSuccess(false);
         return;
       }
@@ -442,7 +392,7 @@ export default function App() {
       setIsProcessing(false);
       setProcessStatus('');
     }
-  }, [aiMode, vehicles]);
+  }, [vehicles]);
 
   const handleManualProcess = useCallback(async (e: FormEvent) => {
     e.preventDefault();
@@ -890,37 +840,11 @@ export default function App() {
                 <div>
                   <h2 className="text-2xl font-black text-gold-400 flex items-center gap-4">
                     <Camera className="w-8 h-8" />
-                    {showDetectionSuccess ? 'Turbo AI Engine' : 'Live Detection'}
+                    Live Detection
                   </h2>
                   <p className="text-gold-200/60 text-sm font-mono uppercase tracking-widest opacity-80">
                     {showDetectionSuccess ? 'Vehicle captured • High-Performance Analysis' : 'Real-time license plate recognition'}
                   </p>
-                </div>
-                
-                {/* AI Mode Selector Toggle */}
-                <div className="flex items-center gap-2 bg-dark-950/60 p-1.5 rounded-2xl border border-gold-500/20 shadow-inner">
-                  <button
-                    onClick={() => setAiMode('fast')}
-                    className={cn(
-                      "px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1.5",
-                      aiMode === 'fast'
-                        ? "bg-gold-500 text-black shadow-[0_0_15px_rgba(255,193,7,0.3)] font-black"
-                        : "text-gold-200/60 hover:text-white"
-                    )}
-                  >
-                    ⚡ Fast Local
-                  </button>
-                  <button
-                    onClick={() => setAiMode('deep')}
-                    className={cn(
-                      "px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center gap-1.5",
-                      aiMode === 'deep'
-                        ? "bg-gold-500 text-black shadow-[0_0_15px_rgba(255,193,7,0.3)] font-black"
-                        : "text-gold-200/60 hover:text-white"
-                    )}
-                  >
-                    🧠 Deep Cloud
-                  </button>
                 </div>
               </div>
 

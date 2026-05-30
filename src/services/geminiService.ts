@@ -61,6 +61,7 @@ export async function recognizeLicensePlate(base64Image: string): Promise<Recogn
     const jsonResult = await response.json();
 
     return {
+      vehicleDetected: jsonResult.vehicleDetected,
       plateNumber: cleanPlateNumber(jsonResult.detectedNumber || jsonResult.plateNumber || ""),
       vehicleType: (jsonResult.vehicleType as VehicleType) || "car",
       confidence: (jsonResult.confidence || 0.95),
@@ -70,16 +71,12 @@ export async function recognizeLicensePlate(base64Image: string): Promise<Recogn
     };
   } catch (error: any) {
     console.error("AI Recognition Error:", error);
-    
-    // Final fallback to Mock Data to ensure the user can always see the feature working
-    console.warn("Using fallback mock data due to API error.");
-    const mockPlates = ["TN43AB1234", "KA01ME5678", "DL10C9999", "MH02XY1234"];
     return {
-      plateNumber: mockPlates[Math.floor(Math.random() * mockPlates.length)],
+      vehicleDetected: false,
+      plateNumber: "",
       vehicleType: "car",
-      confidence: 0.99,
-      boundingBox: { ymin: 400, xmin: 300, ymax: 550, xmax: 700 },
-      error: `API Issue: ${error.message}. (Showing simulated result)`
+      confidence: 0,
+      error: `API Issue: ${error.message}`
     };
   }
 }
